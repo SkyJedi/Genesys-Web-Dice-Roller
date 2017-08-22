@@ -10,7 +10,6 @@ class Initiative extends Component {
     super();
     this.state = {
       slideout: 'none',
-      message: {},
       messageRef: firebase.database().ref().child(`${channel}`).child('message'),
       InitiativeRef: firebase.database().ref().child(`${channel}`).child('Initiative').child('order'),
       Initiative: [],
@@ -223,8 +222,8 @@ addBonusDice(slot, time, color) {
   }
 }
 
-Reset () {
-  this.state.InitiativeRef.remove();
+Reset() {
+  firebase.database().ref().child(`${channel}`).child('Initiative').remove();
 }
 
 clearMarks() {

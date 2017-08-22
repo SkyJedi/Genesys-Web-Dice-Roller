@@ -105,6 +105,10 @@
         color: #fff;
     }
 
+    .mm-popup__btn--ReRoll {
+        width: 140px;
+    }
+
     .mm-popup__box {
         width: 350px;
         position: absolute;
@@ -201,6 +205,18 @@
         left: 750px;
     }
 
+    .mm-popup__box--reroll {
+        width: 550px;
+    }
+
+    .mm-popup__box--ReRoll {
+        width: auto;
+    }
+
+    .mm-popup__box--rerollselect {
+        width: auto;
+    }
+
 
     .mm-popup__box--popover {
         width: 300px;
@@ -280,5 +296,13 @@
         position: absolute;
         top: 300px;
         left: 550px;
+    }
+
+    .mm-popup__box--reroll {
+        width: 550px;
+    }
+
+    .mm-popup__box--rerollselect {
+        min-width: 300px;
     }
 }

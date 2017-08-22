@@ -32,6 +32,7 @@ class Chat extends Component {
   sendchat(stop) {
     stop.preventDefault();
     let chat = this.imgCheck(this.refs.chatInput.value);
+    chat = this.urlCheck(chat);
     chat = `<span>${user}: `+ chat + `</span>`
     this.state.chatRef.push().set(chat);
     this.refs.chatInput.value = '';
@@ -43,6 +44,20 @@ class Chat extends Component {
         if (chat[i].startsWith('[') && chat[i].endsWith(']')) {
           chat[i] = chat[i].slice(1).slice(0, -1).toLowerCase();
           chat[i] = `<img class=tinydie src=/images/${chat[i]}.png /> `;
+        }
+    }
+    let final = ''
+    chat.forEach((param) => {
+      final += param + ' ';
+    })
+    return final;
+  }
+
+  urlCheck(chat) {
+    chat = chat.split(' ');
+    for (var i=0; i<chat.length; i++) {
+        if (chat[i].includes('http')) {
+          chat[i] = `</span><a href="${chat[i]}" style="font-size: small">${chat[i]}</a><span>`;
         }
     }
     let final = ''
@@ -70,6 +85,24 @@ class Chat extends Component {
     }});
   }
 
+  clear() {
+    Popup.create({
+    title: 'Clear Chat',
+    content: 'Are you sure, this will clear all the chat',
+    className: 'chat',
+    buttons: {
+        left: ['cancel'],
+        right: [{
+            text: 'DELETE',
+            className: 'danger',
+            action: () => {
+              this.state.chatRef.remove();
+              Popup.close();
+            }
+        }]
+    }});
+  }
+
   render() {
     return (
       <div className='App' style={{margin: '5px'}}>
@@ -84,7 +117,9 @@ class Chat extends Component {
             <div dangerouslySetInnerHTML={{ __html: v }} />
             </div>
           )}
+          <button className='btnAdd' style={{float: 'right', width: '70px', marginRight: '3px', fontSize: '70%'}} onClick={this.clear.bind(this)}>Clear</button>
         </div>
+
       </div>
     );
   }
