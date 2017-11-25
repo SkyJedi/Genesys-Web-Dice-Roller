@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import '../index.css';
+const dice = require("./misc.js").dice;
 var rolldice = require("./Roll.js"),
     user = window.location.search.slice(1),
     channel = window.location.pathname.slice(1).toLowerCase(),
@@ -87,7 +88,7 @@ class modifyDicePool extends Component {
     if (modifiedRoll[color]+rollResults[color].length===0) delete rollResults[color];
     else {
       for(var i=0; i>modifiedRoll[color]; i--) {
-        rollResults[color].splice((Math.floor(Math.random() * rollResults[color].length))-1, 1)
+        rollResults[color].splice(dice(rollResults[color].length)-1, 1)
       }
     }
     return rollResults;
