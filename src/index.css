@@ -118,8 +118,9 @@ input.face { border: 1px solid var(--line); background: var(--bg); text-align: c
 .entry { background: var(--panel-2); border: 1px solid var(--line); border-radius: 12px; padding: 10px 44px 10px 12px; position: relative; line-height: 1.5; overflow-wrap: anywhere; }
 .entry.divider { text-align: center; color: var(--muted); border-style: dashed; overflow: hidden; white-space: nowrap; }
 .entry .body { cursor: pointer; }
-.entry img.diceface, .msg img.diceface { width: 34px; height: 34px; vertical-align: middle; margin: 2px 1px; }
-.entry span[title] { display: inline-block; margin-top: 4px; padding: 2px 8px; border-radius: 99px; background: var(--bg); border: 1px solid var(--line); }
+.entry img.diceface, .msg img.diceface { width: 44px; height: 44px; vertical-align: middle; margin: 2px 1px; }
+.entry span[title] { display: inline-block; margin-top: 4px; padding: 4px 12px; border-radius: 22px; background: var(--text); color: var(--bg); border: 1px solid var(--line); }
+.entry span[title] img.diceface { width: 52px; height: 52px; }
 .entry p { margin: 6px 0 0; }
 .x { position: absolute; top: 4px; right: 4px; width: 36px; height: 36px; background: none; border: 0; color: var(--muted); border-radius: 8px; }
 .x:hover { color: var(--danger); }
