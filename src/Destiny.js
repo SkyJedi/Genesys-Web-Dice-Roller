@@ -90,7 +90,7 @@ class Destiny extends Component {
           {Object.entries(this.state.destinyPoint).map(([k,v])=>
             <button key={k} className={'token ' + (v === 'lightside' ? 'light' : 'dark')} title='Click to flip Destiny Point'
               aria-label={(v === 'lightside' ? 'Light' : 'Dark') + ' side point, click to flip'} onClick={this.flip.bind(this, v, k)}>
-              {v === 'lightside' ? '\u25CB' : '\u25CF'}
+              <img src={v === 'lightside' ? '/images/swrpg/lightside.png' : '/images/swrpg/darkside.png'} alt='' />
             </button>
           )}
         </div>

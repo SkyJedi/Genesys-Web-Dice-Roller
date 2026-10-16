@@ -20,7 +20,7 @@ const DIE_INFO = {
   yellow: ['Proficiency', 'd12'], green: ['Ability', 'd8'], blue: ['Boost', 'd6'], red: ['Challenge', 'd12'],
   purple: ['Difficulty', 'd8'], black: ['Setback', 'd6'], white: ['Force', 'd12'],
   success: ['Success', 'S'], advantage: ['Advantage', 'A'], triumph: ['Triumph', '\u2605'], fail: ['Failure', '\u2716'],
-  threat: ['Threat', 'T'], despair: ['Despair', '\u2620'], lightside: ['Light side', '\u25CB'], darkside: ['Dark side', '\u25CF'],
+  threat: ['Threat', 'T'], despair: ['Despair', '\u2620'], lightside: ['Light side', 'pip l'], darkside: ['Dark side', 'pip n'],
 };
 // Symbols beyond Latin-1 are written as escapes/entities in the app code (tests aside): Node 23.2 garbles webpack's
 // module-concatenation names in a file holding such a character, which breaks `npm run build` on the PC.
@@ -31,7 +31,7 @@ export function dieCard(color, count, add, remove) {
   return (
     <div key={color} className={'die' + (count ? ' on' : '')}>
       <button className={'face' + (SHAPES[shape] ? '' : ' glyph')} aria-label={`Add ${name}`} onClick={add}>
-        {SHAPES[shape] ? <svg viewBox='0 0 60 60' aria-hidden='true' className={'shape ' + color}>{SHAPES[shape]}</svg> : shape}
+        {SHAPES[shape] ? <svg viewBox='0 0 60 60' aria-hidden='true' className={'shape ' + color}>{SHAPES[shape]}</svg> : shape.startsWith('pip ') ? <i className={'pp ' + shape.slice(4)} /> : shape}
       </button>
       <div className='ctl'>
         <button aria-label={`Remove ${name}`} onClick={remove}>&darr;</button>

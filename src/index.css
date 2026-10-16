@@ -69,8 +69,11 @@ a { color: var(--accent); }
 
 /* ---------- destiny + initiative ---------- */
 .token { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--line); display: grid; place-items: center; font-weight: 800; padding: 0; }
-.token.light { background: #f4f4f8; color: #20232b; }
-.token.dark { background: #20232b; color: #f4f4f8; border-color: #6b7aa3; }
+.token.light, .token.dark { background: none; border: 0; }
+.token img { width: 40px; height: 40px; display: block; }
+.pp { display: inline-block; width: .8em; height: .8em; border-radius: 50%; vertical-align: -.1em; }
+.pp.l { background: #fff; border: 1.5px solid #20232b; }
+.pp.n { background: #000; border: 1.5px solid #9aa6c8; }
 .token.pc { background: #1f6fd1; color: #fff; font-size: .75rem; }
 .token.npc { background: #a33a3a; color: #fff; font-size: .75rem; }
 .token.past { opacity: .55; }

@@ -2,7 +2,7 @@
 // Saved per browser, not per channel: stored messages keep /images/... paths and each viewer picks the art.
 const KEY = 'diceArt';
 // Files that have a Star Wars copy under /images/swrpg/ (same name); anything else keeps its one picture.
-const hasSwrpg = /^\/images\/(dice\/[a-z]+-[a-z!]*|yellow|green|blue|red|purple|black|white|success|advantage|triumph|fail|threat|despair|lightside|darkside)\.png$/i;
+const hasSwrpg = /^\/images\/(dice\/[a-z]+-[a-z!]*|yellow|green|blue|red|purple|black|white|success|advantage|triumph|fail|threat|despair)\.png$/i; // light/dark side stay plain white/black pips
 
 function diceArt() {
   try {

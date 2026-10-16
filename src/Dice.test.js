@@ -8,5 +8,5 @@ it('die cards show their symbols and arrow buttons', () => {
   expect(html).toContain('↓');
   expect(html).toContain('↑');
   expect(html).toContain('<span class="n">2</span>');
-  expect(renderToStaticMarkup(dieCard('lightside', 0, () => {}, () => {}))).toContain('○');
+  expect(renderToStaticMarkup(dieCard('lightside', 0, () => {}, () => {}))).toContain('<i class="pp l"></i>');
 });
