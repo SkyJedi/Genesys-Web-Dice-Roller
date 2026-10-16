@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import '../index.css';
+const escapeHtml = require("./safeHtml.js").escapeHtml;
 var rolldice = require("./Roll.js"),
     user = window.location.search.slice(1),
     channel = window.location.pathname.slice(1).toLowerCase(),
@@ -45,11 +46,11 @@ class selectReRoll extends Component {
         diceRoll[reRoll[key].color] = 1;
         rollResults[reRoll[key].color].splice(reRoll[key].position, 1, rolldice.rollDicePool(diceRoll)[reRoll[key].color][0]);
       })
-      rollResults.text = `<span> ${user} rerolled selected dice </span>`;
+      rollResults.text = `<span> ${escapeHtml(user)} rerolled selected dice </span>`;
       rollResults = rolldice.countSymbols(rollResults, user);
       if (this.refs.caption.value !== '') {
         rollResults.caption = this.refs.caption.value;
-        rollResults.text += `<span> ${this.refs.caption.value} </span>`;
+        rollResults.text += `<span> ${escapeHtml(this.refs.caption.value)} </span>`;
       }
       if (rollResults.text !== undefined) this.state.messageRef.push().set(rollResults);
       this.props.popupClose();

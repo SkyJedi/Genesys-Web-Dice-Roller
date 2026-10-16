@@ -4,6 +4,7 @@ import * as firebase from 'firebase';
 import './index.css';
 import './popup.css';
 var reRoll = require("./functions/reRoll.js").reRoll;
+var cleanHtml = require("./functions/safeHtml.js").cleanHtml;
 
 
 
@@ -76,7 +77,7 @@ class Message extends Component {
         {Object.keys(this.state.message).reverse().map((k)=>
           <div className={'entry' + (/^-{3}/.test(this.state.message[k].text) ? ' divider' : '')} key={k}>
           <button className='x' aria-label='Delete message' onClick={this.popupDeleteMessage.bind(this, k)}>&#x2715;</button>
-          <div className='body' title='Click to reroll' onClick={this.reRoll.bind(this, k)} dangerouslySetInnerHTML={{ __html: this.state.message[k].text }} />
+          <div className='body' title='Click to reroll' onClick={this.reRoll.bind(this, k)} dangerouslySetInnerHTML={{ __html: cleanHtml(this.state.message[k].text) }} />
           </div>
         )}
         </div>

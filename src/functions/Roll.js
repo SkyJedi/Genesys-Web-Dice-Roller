@@ -1,4 +1,5 @@
 const dice = require("./misc.js").dice;
+const escapeHtml = require("./safeHtml.js").escapeHtml;
 
 function roll(diceRoll, polyhedralValue, caption, user) {
   var rollResults = {};
@@ -15,7 +16,7 @@ function roll(diceRoll, polyhedralValue, caption, user) {
   rollResults = rollDicePool(diceRoll);
 
   //count symbols and build message results
-  rollResults.text = `<span> ${user} rolled </span>`;
+  rollResults.text = `<span> ${escapeHtml(user)} rolled </span>`;
   rollResults = countSymbols(rollResults, user);
 
   //polyhedral
@@ -24,7 +25,7 @@ function roll(diceRoll, polyhedralValue, caption, user) {
   //add the caption in
   if (caption !== '') {
     rollResults.caption = caption;
-    rollResults.text += `<span> ${caption} </span>`;
+    rollResults.text += `<span> ${escapeHtml(caption)} </span>`;
   }
   return rollResults;
 }

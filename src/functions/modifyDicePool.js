@@ -3,6 +3,7 @@ import * as firebase from 'firebase';
 import '../index.css';
 import { dieCard } from '../Dice';
 const dice = require("./misc.js").dice;
+const escapeHtml = require("./safeHtml.js").escapeHtml;
 var rolldice = require("./Roll.js"),
     user = window.location.search.slice(1),
     channel = window.location.pathname.slice(1).toLowerCase(),
@@ -66,12 +67,12 @@ class modifyDicePool extends Component {
         if (modifiedRoll[color] < 0) rollResults = this.deleteDie(modifiedRoll, color, rollResults);
         if (modifiedRoll[color] > 0) rollResults = this.newDie(modifiedRoll, color, rollResults);
       })
-      rollResults.text = `<span> ${user} modified dice pool </span>`;
+      rollResults.text = `<span> ${escapeHtml(user)} modified dice pool </span>`;
       rollResults = rolldice.countSymbols(rollResults, user);
       if (modifiedRoll['polyhedral'] > 0) rollResults = rolldice.rollPolyhedral(rollResults, modifiedRoll, this.refs.polyhedral.value);
       if (this.refs.caption.value !== '') {
         rollResults.caption = this.refs.caption.value;
-        rollResults.text += `<span> ${this.refs.caption.value} </span>`;
+        rollResults.text += `<span> ${escapeHtml(this.refs.caption.value)} </span>`;
       }
       if (rollResults.text !== undefined) this.state.messageRef.push().set(rollResults);
       this.props.popupClose();

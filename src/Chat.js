@@ -3,6 +3,7 @@ import * as firebase from 'firebase';
 import './index.css';
 import Popup from 'react-popup';
 import './popup.css';
+import { escapeHtml, cleanHtml } from './functions/safeHtml';
 var channel = window.location.pathname.slice(1).toLowerCase(),
     user = window.location.search.slice(1);
 
@@ -31,9 +32,9 @@ class Chat extends Component {
 
   sendchat(stop) {
     stop.preventDefault();
-    let chat = this.imgCheck(this.refs.chatInput.value);
+    let chat = this.imgCheck(escapeHtml(this.refs.chatInput.value));
     chat = this.urlCheck(chat);
-    chat = `<span>${user}: `+ chat + `</span>`
+    chat = `<span>${escapeHtml(user)}: `+ chat + `</span>`
     this.state.chatRef.push().set(chat);
     this.refs.chatInput.value = '';
   }
@@ -41,7 +42,7 @@ class Chat extends Component {
   imgCheck(chat) {
     chat = chat.split(' ');
     for (var i=0; i<chat.length; i++) {
-        if (chat[i].startsWith('[') && chat[i].endsWith(']')) {
+        if (/^\[[a-z0-9-]+\]$/i.test(chat[i])) {
           chat[i] = chat[i].slice(1).slice(0, -1).toLowerCase();
           chat[i] = `<img class=tinydie src=/images/${chat[i]}.png /> `;
         }
@@ -56,7 +57,7 @@ class Chat extends Component {
   urlCheck(chat) {
     chat = chat.split(' ');
     for (var i=0; i<chat.length; i++) {
-        if (chat[i].includes('http')) {
+        if (/^https?:\/\//i.test(chat[i])) {
           chat[i] = `</span><a href="${chat[i]}" style="font-size: small">${chat[i]}</a><span>`;
         }
     }
@@ -116,7 +117,7 @@ class Chat extends Component {
           {Object.entries(this.state.chat).reverse().map(([k,v])=>
             <div className='msg' key={k}>
             <button className='x' aria-label='Delete chat message' onClick={this.popupDeleteMessage.bind(this, k)}>&#x2715;</button>
-            <div dangerouslySetInnerHTML={{ __html: v }} />
+            <div dangerouslySetInnerHTML={{ __html: cleanHtml(v) }} />
             </div>
           )}
         </div>
