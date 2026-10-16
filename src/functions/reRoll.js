@@ -79,6 +79,5 @@ function selectDice(message) {
   });
 }
 
-module.exports = {
-  reRoll: reRoll,
-}
+// ESM export: this file uses import, and webpack 5 forbids module.exports in it.
+export { reRoll };
