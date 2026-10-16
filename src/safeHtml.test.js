@@ -32,3 +32,13 @@ it('the markup the app writes still shows', () => {
 
   expect(cleanHtml('bob 42<p>Minor nick</p>')).toBe('bob 42<p>Minor nick</p>');
 });
+
+it('character bonus-die icons keep their picture and lose anything else', () => {
+  const icons = "<img src='/images/blue.png' alt='blue.png' style='height: 15px' width: 15px;'/>"
+    + "<img src='/images/black.png' alt='black.png' style='height: 15px; width: 15px;'/>";
+  const out = cleanHtml(icons);
+  expect(out).toContain('src="/images/blue.png"');
+  expect(out).toContain('src="/images/black.png"');
+  expect(cleanHtml("<img src='/images/blue.png' onerror='alert(1)'><svg onload='alert(2)'></svg>"))
+    .not.toMatch(/onerror|onload|svg/);
+});

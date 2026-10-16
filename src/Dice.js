@@ -4,6 +4,7 @@ import './index.css';
 var crit = require("./functions/Crit.js");
 var rolldice = require("./functions/Roll.js");
 const dice = require("./functions/misc.js").dice;
+const escapeHtml = require("./functions/safeHtml.js").escapeHtml;
 
 var channel = window.location.pathname.slice(1).toLowerCase(),
     user = window.location.search.slice(1),
@@ -107,7 +108,7 @@ class Dice extends Component {
     } else {
       critText = crit.shipcrit(critRoll[0]);
     }
-    critText = user + ' ' + critRoll[1] + `<p>` + critText + `</p>`
+    critText = escapeHtml(user) + ' ' + critRoll[1] + `<p>` + critText + `</p>`
     this.state.messageRef.push().set({text: critText});
     this.refs.modifier.value = '';
 

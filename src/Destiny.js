@@ -3,6 +3,8 @@ import * as firebase from 'firebase';
 import Popup from 'react-popup';
 import './index.css';
 
+const escapeHtml = require("./functions/safeHtml.js").escapeHtml;
+
 var channel = window.location.pathname.slice(1).toLowerCase(),
     user = window.location.search.slice(1);
 
@@ -34,21 +36,21 @@ class Destiny extends Component {
 
   destinyAdd() {
     this.state.destinyRef.push().set('lightside');
-    this.state.messageRef.push().set({text: `${user} added a light side point.`});
+    this.state.messageRef.push().set({text: `${escapeHtml(user)} added a light side point.`});
   }
   destinyRemove() {
     if (this.state.destinyPoint !== 0) {
       this.state.destinyRef.child(Object.keys(this.state.destinyPoint)[Object.keys(this.state.destinyPoint).length-1]).remove();
-      this.state.messageRef.push().set({text: `${user} removed a destiny point.`});
+      this.state.messageRef.push().set({text: `${escapeHtml(user)} removed a destiny point.`});
     }
   }
   flip (v, k) {
     if (v === 'lightside') {
       this.state.destinyRef.child(k).set('darkside');
-      this.state.messageRef.push().set({text: `${user} used a light side point.`})
+      this.state.messageRef.push().set({text: `${escapeHtml(user)} used a light side point.`})
     } else {
       this.state.destinyRef.child(k).set('lightside');
-      this.state.messageRef.push().set({text: `${user} used a dark side point.`})
+      this.state.messageRef.push().set({text: `${escapeHtml(user)} used a dark side point.`})
     }
   }
 
@@ -64,7 +66,7 @@ class Destiny extends Component {
             className: 'danger',
             action: () => {
               this.state.destinyRef.remove();
-              this.state.messageRef.push().set({text: `${user} resets the destiny pool.`});
+              this.state.messageRef.push().set({text: `${escapeHtml(user)} resets the destiny pool.`});
               Popup.close();
             }
         }],

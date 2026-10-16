@@ -4,6 +4,7 @@ import * as firebase from 'firebase';
 import './index.css';
 import './popup.css';
 const dice = require("./functions/misc.js").dice;
+const cleanHtml = require("./functions/safeHtml.js").cleanHtml;
 
 var channel = window.location.pathname.slice(1).toLowerCase();
 
@@ -385,7 +386,7 @@ class Character extends Component {
             <td onClick={this.selectCharacter.bind(this, k)}>{ch.currentWounds}/{ch.maxWounds}</td>
             <td onClick={this.selectCharacter.bind(this, k)}>{ch.currentStrain}/{ch.maxStrain}</td>
             <td><button aria-label={'Add bonus die to ' + ch.name} onClick={this.addBonusDice.bind(this, k)}>
-              <span dangerouslySetInnerHTML={{ __html: ch.dice.blue }} /><span dangerouslySetInnerHTML={{ __html: ch.dice.black }} /><span dangerouslySetInnerHTML={{ __html: ch.dice.upgrade }} /><span dangerouslySetInnerHTML={{ __html: ch.dice.downgrade }} />
+              <span dangerouslySetInnerHTML={{ __html: cleanHtml(ch.dice.blue) }} /><span dangerouslySetInnerHTML={{ __html: cleanHtml(ch.dice.black) }} /><span dangerouslySetInnerHTML={{ __html: cleanHtml(ch.dice.upgrade) }} /><span dangerouslySetInnerHTML={{ __html: cleanHtml(ch.dice.downgrade) }} />
               {ch.dice.blue + ch.dice.black + ch.dice.upgrade + ch.dice.downgrade === '' && '+'}
             </button></td>
           </tr>
