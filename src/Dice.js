@@ -9,6 +9,39 @@ var channel = window.location.pathname.slice(1).toLowerCase(),
     user = window.location.search.slice(1),
     diceOrder = ['yellow', 'green', 'blue', 'red', 'purple', 'black', 'white'];
 
+// Die art per Pattern's mockup: plain SVG shapes in the die colour (CSS .shape.<color>); symbols get a glyph.
+const SHAPES = {
+  d12: <polygon points='30,3 52,14 57,38 41,56 19,56 3,38 8,14' />,
+  d8: <polygon points='30,3 55,30 30,57 5,30' />,
+  d6: <rect x='7' y='7' width='46' height='46' rx='8' />,
+};
+const DIE_INFO = {
+  yellow: ['Proficiency', 'd12'], green: ['Ability', 'd8'], blue: ['Boost', 'd6'], red: ['Challenge', 'd12'],
+  purple: ['Difficulty', 'd8'], black: ['Setback', 'd6'], white: ['Force', 'd12'],
+  success: ['Success', 'S'], advantage: ['Advantage', 'A'], triumph: ['Triumph', '\u2605'], fail: ['Failure', '\u2716'],
+  threat: ['Threat', 'T'], despair: ['Despair', '\u2620'], lightside: ['Light side', '\u25CB'], darkside: ['Dark side', '\u25CF'],
+};
+// Symbols beyond Latin-1 are written as escapes/entities in the app code (tests aside): Node 23.2 garbles webpack's
+// module-concatenation names in a file holding such a character, which breaks `npm run build` on the PC.
+
+// One die card; used by Dice and functions/modifyDicePool so both pools look the same.
+export function dieCard(color, count, add, remove) {
+  const [name, shape] = DIE_INFO[color];
+  return (
+    <div key={color} className={'die' + (count ? ' on' : '')}>
+      <button className={'face' + (SHAPES[shape] ? '' : ' glyph')} aria-label={`Add ${name}`} onClick={add}>
+        {SHAPES[shape] ? <svg viewBox='0 0 60 60' aria-hidden='true' className={'shape ' + color}>{SHAPES[shape]}</svg> : shape}
+      </button>
+      <div className='ctl'>
+        <button aria-label={`Remove ${name}`} onClick={remove}>&darr;</button>
+        <span className='n'>{count}</span>
+        <button aria-label={`Add ${name}`} onClick={add}>&uarr;</button>
+      </div>
+      <div className='dname'>{SHAPES[shape] ? `${name} (${color})` : name}</div>
+    </div>
+  );
+}
+
 class Dice extends Component {
   constructor(props) {
     super(props);
@@ -146,61 +179,44 @@ class Dice extends Component {
 
   render() {
     return (
-      <div style={{topMargin: '5px', width: '525px'}}>
-      {diceOrder.map((diceColor) =>
-        <div key={diceColor} className='dice-box' style={{marginLeft:6}}>
-          <div style={{float: 'left', marginLeft: 0, padding: 0}}>
-            <button className='btnAdd' onClick={this.addDie.bind(this, diceColor)}>↑</button>
-            <button className='btnAdd' onClick={this.removeDie.bind(this, diceColor)}>↓</button>
+      <div className='panel' aria-label='Dice pool'>
+      <h2>Dice pool
+        <span className='grow'><button ref='extras' className='btn sm' aria-expanded={diceOrder.length > 7} onClick={this.expandExtras.bind(this)}>Symbols</button></span>
+      </h2>
+      <div className='pool'>
+        {diceOrder.slice(0, 7).map((diceColor) => dieCard(diceColor, this.state.diceRoll[diceColor], this.addDie.bind(this, diceColor), this.removeDie.bind(this, diceColor)))}
+        <div className={'die' + (this.state.diceRoll.polyhedral ? ' on' : '')}>
+          <input className='face' ref='polyhedral' defaultValue='100' aria-label='Polyhedral die sides' />
+          <div className='ctl'>
+            <button aria-label='Remove polyhedral die' onClick={this.removeDie.bind(this, 'polyhedral')}>&darr;</button>
+            <span className='n'>{this.state.diceRoll.polyhedral}</span>
+            <button aria-label='Add polyhedral die' onClick={this.addDie.bind(this, 'polyhedral')}>&uarr;</button>
           </div>
-          <div className='dice-amount' style={{float: 'left', marginLeft: 10}}> {this.state.diceRoll[diceColor]}</div>
-          <div>
-              <img
-              className='dice'
-              key={diceColor}
-              style={{float: 'left', marginLeft: 15}}
-              onClick={this.addDie.bind(this, diceColor)}
-              src={`/images/${diceColor}.png`}
-              alt={`${diceColor}`} />
-          </div>
+          <div className='dname'>Polyhedral (D-sides)</div>
         </div>
-      )}
-      <div className='dice-box' style={{marginLeft:6}}>
-        <div style={{float: 'left', marginLeft: 2, padding: 0}}>
-          <button className='btnAdd' onClick={this.addDie.bind(this, 'polyhedral')}>↑</button>
-          <button className='btnAdd' onClick={this.removeDie.bind(this, 'polyhedral')}>↓</button>
-        </div>
-        <div className='dice-amount' style={{float: 'left', marginLeft: 10}}> {this.state.diceRoll.polyhedral} </div>
-        <div>
-          <input className='textinput' style={{float: 'left', marginLeft: 15, width: '3em', textAlign: 'center', margin: '15px 0px 15px 25px'}} ref='polyhedral' defaultValue='100' />
-        </div>
+        {diceOrder.slice(7).map((diceColor) => dieCard(diceColor, this.state.diceRoll[diceColor], this.addDie.bind(this, diceColor), this.removeDie.bind(this, diceColor)))}
       </div>
-      <input type='button' ref='extras' className='lrgButton' style={{verticalAlign:'bottom', margin: '5px'}} onClick={this.expandExtras.bind(this)} value='Symbols' />
 
-      <div />
-
-      <div style={{display: 'inline-block'}}>
-        <input type='button' ref='roll' className='lrgButton' onClick={this.roll.bind(this)} value='Roll' />
-        <input className='textinput' ref='caption' name='caption' placeholder='caption' style={{width: '70px', paddingLeft: '5px'}}/>
-        <input type='button' ref='reset' className='lrgButton' style={{background: '#9e9e9e'}} onClick={this.reset.bind(this)} value='Reset' />
-        <input type='button' ref='specialRollsDropDown' onClick={this.dropMenu.bind(this)} className='lrgButton' style={{width: '100px'}} value='Special Rolls'/>
-        <label className='switch'><input type='checkbox' ref='resetCheck'/><div className='slider round'></div></label>&nbsp;<span>Save Pool</span>
+      <div className='actions'>
+        <button ref='roll' className='btn primary roll' onClick={this.roll.bind(this)}>Roll</button>
+        <input className='field' ref='caption' name='caption' placeholder='Caption (optional)' aria-label='Caption' />
+        <button ref='reset' className='btn' onClick={this.reset.bind(this)}>Reset</button>
+        <label className='switch'><input type='checkbox' ref='resetCheck'/><span className='track'></span>Save pool</label>
+        <button ref='specialRollsDropDown' className='btn' aria-expanded={this.state.showOptions !== 'none'} onClick={this.dropMenu.bind(this)}>Special rolls &#x25BE;</button>
       </div>
-      <div style={{display: this.state.showOptions}}>
-        <form>
-          <button onClick={this.critical.bind(this, 'critical')} className='lrgButton' style={{width: '100px'}}>Critical</button>
-          <button onClick={this.critical.bind(this, 'shipcrit')}className='lrgButton' style={{width: '100px'}}>Ship Critical</button>
-          <input className='textinput' ref='modifier' name='modifier' placeholder='modifier' style={{width: '70px', paddingLeft: '5px'}}/>
+      <div className={'special' + (this.state.showOptions !== 'none' ? ' open' : '')}>
+        <form className='row'>
+          <button onClick={this.critical.bind(this, 'critical')} className='btn'>Critical</button>
+          <button onClick={this.critical.bind(this, 'shipcrit')} className='btn'>Ship Critical</button>
+          <input className='field' ref='modifier' name='modifier' placeholder='modifier' aria-label='Critical modifier' />
         </form>
-          <input type='button' style={{width: '100px'}} ref='gleepglop' className='lrgButton' onClick={this.gleepglop.bind(this)} value='Gleep Glop' />
-          <input type='button' style={{width: '100px'}} ref='destinyRoll' className='lrgButton' onClick={this.destinyRoll.bind(this)} value='Roll Destiny' />
-          <br/>
-          <input type='button' style={{width: '100px'}} ref='initiativeResult.rolledSymbols' className='lrgButton' onClick={this.initiativeRoll.bind(this)} value='Roll Initiative' />
-          &nbsp;<span>PC</span>&nbsp;
-          <label className='switch'><input type='checkbox' ref='pcCheck'/><div className='slider round'></div></label>&nbsp;
-          <span>NPC</span>
+        <button ref='gleepglop' className='btn' onClick={this.gleepglop.bind(this)}>Gleep Glop</button>
+        <button ref='destinyRoll' className='btn' onClick={this.destinyRoll.bind(this)}>Roll Destiny</button>
+        <span className='break'></span>
+        <button ref='initiativeResult.rolledSymbols' className='btn' onClick={this.initiativeRoll.bind(this)}>Roll Initiative</button>
+        <span>PC</span>
+        <label className='switch'><input type='checkbox' ref='pcCheck' aria-label='NPC'/><span className='track'></span>NPC</label>
       </div>
-      <div/>
     </div>
     );
   }

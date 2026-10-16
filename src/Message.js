@@ -69,16 +69,17 @@ class Message extends Component {
 
   render() {
     return (
-      <div className='messagebox'>
-      <div>
+      <div className='panel grow-panel'>
+        <h2>Roll log <span className='grow'><button className='btn sm' onClick={this.clear.bind(this)}>Clear</button></span></h2>
+        <div className='log' aria-live='polite'>
+        {Object.keys(this.state.message).length === 0 && <div className='empty'>No rolls yet. Build a pool and press Roll.</div>}
         {Object.keys(this.state.message).reverse().map((k)=>
-          <div className='message' style={{lineHeight: '1.2'}} key={k}>
-          <button onClick={this.popupDeleteMessage.bind(this, k)} style={{float: 'right', height: '20px', width: '20px', background: 'none', color: '#969595', fontSize: '12px', border: 'none'}}>X</button>
-          <div onClick={this.reRoll.bind(this, k)} dangerouslySetInnerHTML={{ __html: this.state.message[k].text }} />
+          <div className={'entry' + (/^-{3}/.test(this.state.message[k].text) ? ' divider' : '')} key={k}>
+          <button className='x' aria-label='Delete message' onClick={this.popupDeleteMessage.bind(this, k)}>&#x2715;</button>
+          <div className='body' title='Click to reroll' onClick={this.reRoll.bind(this, k)} dangerouslySetInnerHTML={{ __html: this.state.message[k].text }} />
           </div>
         )}
-        <button className='btnAdd' style={{float: 'right', width: '70px', marginRight: '3px', fontSize: '70%'}} onClick={this.clear.bind(this)}>Clear</button>
-      </div>
+        </div>
       </div>
     );
   }

@@ -41,12 +41,12 @@ class Character extends Component {
         title: 'New Character',
         className: 'character',
         content:
-        <div style={{textAlign: 'center'}}>
-          <input className='textinput' style={{textAlign: 'center'}} id='charName' placeholder='Character Name' />
-          <input className='textinput' type='number' style={{textAlign: 'center'}} id='maxWounds' placeholder='Max Wounds' />
-          <input className='textinput' type='number' style={{textAlign: 'center'}} id='maxStrain' placeholder='Max Strain' />
-          <input className='textinput' type='number' style={{textAlign: 'center'}} id='credits' placeholder='Credits' />
-          <input className='textinput' style={{textAlign: 'center'}} id='imageURL' placeholder='Image URL' />
+        <div>
+          <label htmlFor='charName'>Character name</label><input className='mm-popup__input' id='charName' placeholder='Character Name' />
+          <label htmlFor='maxWounds'>Max wounds</label><input className='mm-popup__input' type='number' id='maxWounds' placeholder='Max Wounds' />
+          <label htmlFor='maxStrain'>Max strain</label><input className='mm-popup__input' type='number' id='maxStrain' placeholder='Max Strain' />
+          <label htmlFor='credits'>Credits</label><input className='mm-popup__input' type='number' id='credits' placeholder='Credits' />
+          <label htmlFor='imageURL'>Image URL</label><input className='mm-popup__input' id='imageURL' placeholder='optional' />
         </div>,
         buttons: {
             left: ['cancel'],
@@ -86,20 +86,11 @@ class Character extends Component {
         className: 'character',
         content:
         <div>
-        <div style={{fontSize: '20px', float: 'left', lineHeight: '2.2', textAlign: 'right'}}>
-          <span style={{padding: '10px 0'}}>Character Name</span><br/>
-          <span style={{padding: '10px 0'}}>Max Wounds</span><br/>
-          <span style={{padding: '10px 0'}}>Max Strain</span><br/>
-          <span style={{padding: '10px 0'}}>Credits</span><br/>
-          <span style={{padding: '10px 0'}}>imageURL</span><br/>
-        </div>
-        <div style={{marginLeft: '135px'}}>
-          <input className='textinput' style={{textAlign: 'center', width: '7em'}} id='charName' defaultValue={this.state.currentCharacter['name']} /><br/>
-          <input className='textinput' type='number' style={{textAlign: 'center', width: '7em'}} id='maxWounds' defaultValue={this.state.currentCharacter['maxWounds']} /><br/>
-          <input className='textinput' type='number' style={{textAlign: 'center', width: '7em'}} id='maxStrain' defaultValue={this.state.currentCharacter['maxStrain']} /><br/>
-          <input className='textinput' type='number' style={{textAlign: 'center', width: '7em'}} id='credits' defaultValue={this.state.currentCharacter['credits']} /><br/>
-          <input className='textinput' style={{textAlign: 'center', width: '7em'}} id='imageURL' defaultValue={this.state.currentCharacter['imageURL']} /><br/>
-        </div>
+          <label htmlFor='charName'>Character name</label><input className='mm-popup__input' id='charName' defaultValue={this.state.currentCharacter['name']} />
+          <label htmlFor='maxWounds'>Max wounds</label><input className='mm-popup__input' type='number' id='maxWounds' defaultValue={this.state.currentCharacter['maxWounds']} />
+          <label htmlFor='maxStrain'>Max strain</label><input className='mm-popup__input' type='number' id='maxStrain' defaultValue={this.state.currentCharacter['maxStrain']} />
+          <label htmlFor='credits'>Credits</label><input className='mm-popup__input' type='number' id='credits' defaultValue={this.state.currentCharacter['credits']} />
+          <label htmlFor='imageURL'>Image URL</label><input className='mm-popup__input' id='imageURL' defaultValue={this.state.currentCharacter['imageURL']} />
         </div>,
         buttons: {
             left: ['cancel'],
@@ -348,50 +339,60 @@ class Character extends Component {
   }
 
   render() {
+    const c = this.state.currentCharacter;
+    // Bar fill for current/max; max may be 0 or a string from the form.
+    const pct = (cur, max) => (+max > 0 ? Math.min(100, +cur / +max * 100) : 0) + '%';
     return (
-      <div className='dice-box' style={{margin: '5px', marginTop: '40px', height: 'auto', display: 'block', textAlign: 'center'}}>
-        <img className='characterimage' ref='imageURL' onClick={this.editCharacter.bind(this)} style={{float: 'right', marginRight: '5px'}} src={this.state.currentCharacter['imageURL']} alt=''/>
-        <div style={{float: 'left'}}>
-          <button className='btnAdd' onClick={this.setNew.bind(this)}>+</button>
-          <button className='btnAdd' onClick={this.popupDeleteCharacter.bind(this)}>-</button>
-          <button className='btnAdd' onClick={this.next.bind(this)}>→</button>
-          <button className='btnAdd' onClick={this.previous.bind(this)}>←</button>
-          <button onClick={this.modifyStats.bind(this)} className='btnAdd' style={{fontSize: '12px'}}>Set</button>
+      <div className='panel'>
+        <h2>Character
+          <span className='grow'>
+            <button className='btn sm' aria-label='Previous character' onClick={this.previous.bind(this)}>&larr;</button>
+            <button className='btn sm' aria-label='Next character' onClick={this.next.bind(this)}>&rarr;</button>
+            <button className='btn sm' aria-label='New character' onClick={this.setNew.bind(this)}>+</button>
+            <button className='btn sm' aria-label='Delete character' onClick={this.popupDeleteCharacter.bind(this)}>&minus;</button>
+          </span>
+        </h2>
+        <div className='char-top'>
+          <button className='portrait' title='Edit character' aria-label='Edit character' onClick={this.editCharacter.bind(this)}>
+            <img ref='imageURL' src={c['imageURL']} alt=''/>
+          </button>
+          <div>
+            <div className='cname'>{c['name']}</div>
+            <div className='incap' style={{display: this.state.incapacitated}}>Incapacitated</div>
+          </div>
         </div>
-        <table style={{margin: '10px 0 10px 80px'}}>
-          <thead>
-            <tr><td colSpan='2' style={{textAlign: 'center'}}><b style={{fontSize: '20px', color: 'black', textAlign: 'center', padding: '5px'}}>{this.state.currentCharacter['name']}</b></td></tr>
-          </thead>
-          <tbody>
-          <tr><td colSpan='2' style={{textAlign: 'center'}}><b style={{fontSize: '20px', color: 'red', display: this.state.incapacitated}}>Incapacitated</b></td></tr>
-          <tr>
-            <td><form onSubmit={this.modifyStats.bind(this)}><input className='textinput' ref='currentWounds' placeholder={this.state.currentCharacter['currentWounds']} style={{width: '50px', textAlign: 'center', height: 'auto', fontSize: '15px'}}/></form></td>
-            <td style={{textAlign: 'left'}}><b style={{fontSize: '16px', color: 'Black'}}>/{this.state.currentCharacter['maxWounds']} Wounds</b></td>
-          </tr>
-          <tr>
-            <td><form onSubmit={this.modifyStats.bind(this)}><input className='textinput' ref='currentStrain' placeholder={this.state.currentCharacter['currentStrain']} style={{width: '50px', textAlign: 'center', height: 'auto', fontSize: '15px'}}/></form></td>
-            <td style={{textAlign: 'left'}}><b style={{fontSize: '16px', color: 'Black'}}>/{this.state.currentCharacter['maxStrain']} Strain</b></td>
-          </tr>
-          <tr>
-            <td><form onSubmit={this.modifyStats.bind(this)}><input className='textinput' ref='credits' placeholder={this.state.currentCharacter['credits']} style={{width: '50px', textAlign: 'center', height: 'auto', fontSize: '15px'}}/></form></td>
-            <td style={{textAlign: 'left'}}><b style={{fontSize: '16px', color: 'Black'}}> Credits</b></td>
-          </tr>
-          </tbody>
-        </table>
-        <div >
-        <table style={{fontSize:'15px', width: '100%', borderCollapse: 'collapse', padding: '2px 0 2px 0', borderRadius: '1px'}}>
-        <thead><tr><td><b>Init</b></td><td><b>Name</b></td><td><b>Wound</b></td><td><b>Strain</b></td><td><b>Dice</b></td></tr></thead>
+        <form className='stats' onSubmit={this.modifyStats.bind(this)}>
+          <div className='stat'><div className='l'>Wounds</div><div className='v'>{c['currentWounds']}/{c['maxWounds']}</div>
+            <div className='bar w'><i style={{width: pct(c['currentWounds'], c['maxWounds'])}}></i></div>
+            <input ref='currentWounds' placeholder='+2, -1 or 5' aria-label='Change wounds' /></div>
+          <div className='stat'><div className='l'>Strain</div><div className='v'>{c['currentStrain']}/{c['maxStrain']}</div>
+            <div className='bar'><i style={{width: pct(c['currentStrain'], c['maxStrain'])}}></i></div>
+            <input ref='currentStrain' placeholder='+2, -1 or 5' aria-label='Change strain' /></div>
+          <div className='stat'><div className='l'>Credits</div><div className='v'>{c['credits']}</div>
+            <div className='bar none'><i></i></div>
+            <input ref='credits' placeholder='+50, -20' aria-label='Change credits' /></div>
+          <button className='btn primary' type='submit'>Set</button>
+        </form>
+        <table className='party'>
+        <thead><tr><th>Init</th><th>Name</th><th>Wound</th><th>Strain</th><th>Dice</th></tr></thead>
         <tbody>
-        {Object.keys(this.state.character).map((k) =>
-          <tr style={{textAlign: 'left', border: 'solid #969595 1px'}} key={k}><td onClick={this.initClick.bind(this, k)}>{this.state.character[k].init}</td><td onClick={this.selectCharacter.bind(this, k)}><b>{this.state.character[k].name}</b></td><td onClick={this.selectCharacter.bind(this, k)}>&nbsp;{this.state.character[k].currentWounds}/{this.state.character[k].maxWounds}</td><td onClick={this.selectCharacter.bind(this, k)}>&nbsp;{this.state.character[k].currentStrain}/{this.state.character[k].maxStrain}</td><td onClick={this.addBonusDice.bind(this, k)}><div style={{display: 'inline-block'}} dangerouslySetInnerHTML={{ __html: this.state.character[k].dice.blue }} /><div style={{display: 'inline-block'}} dangerouslySetInnerHTML={{ __html: this.state.character[k].dice.black }} /><div style={{display: 'inline-block'}} dangerouslySetInnerHTML={{ __html: this.state.character[k].dice.upgrade }} /><div style={{display: 'inline-block'}} dangerouslySetInnerHTML={{ __html: this.state.character[k].dice.downgrade }} /></td></tr>
-        )}
+        {Object.keys(this.state.character).map((k) => {
+          const ch = this.state.character[k];
+          return (
+          <tr className={ch.key === c.key ? 'cur' : ''} key={k}>
+            <td><button aria-label={'Initiative mark for ' + ch.name} onClick={this.initClick.bind(this, k)}>{ch.init || '·'}</button></td>
+            <td><button onClick={this.selectCharacter.bind(this, k)}>{ch.name}</button></td>
+            <td onClick={this.selectCharacter.bind(this, k)}>{ch.currentWounds}/{ch.maxWounds}</td>
+            <td onClick={this.selectCharacter.bind(this, k)}>{ch.currentStrain}/{ch.maxStrain}</td>
+            <td><button aria-label={'Add bonus die to ' + ch.name} onClick={this.addBonusDice.bind(this, k)}>
+              <span dangerouslySetInnerHTML={{ __html: ch.dice.blue }} /><span dangerouslySetInnerHTML={{ __html: ch.dice.black }} /><span dangerouslySetInnerHTML={{ __html: ch.dice.upgrade }} /><span dangerouslySetInnerHTML={{ __html: ch.dice.downgrade }} />
+              {ch.dice.blue + ch.dice.black + ch.dice.upgrade + ch.dice.downgrade === '' && '+'}
+            </button></td>
+          </tr>
+          );
+        })}
         </tbody>
         </table>
-        </div>
-
-
-
-
       </div>
     )
   }

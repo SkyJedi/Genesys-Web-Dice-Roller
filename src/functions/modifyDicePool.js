@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import '../index.css';
+import { dieCard } from '../Dice';
 const dice = require("./misc.js").dice;
 var rolldice = require("./Roll.js"),
     user = window.location.search.slice(1),
@@ -96,42 +97,26 @@ class modifyDicePool extends Component {
 
   render() {
     return (
-      <div style={{topMargin: '5px', width: '525px'}}>
-      {diceOrder.map((diceColor) =>
-        <div key={diceColor} className='dice-box' style={{marginLeft:6}}>
-          <div style={{float: 'left', marginLeft: 0, padding: 0}}>
-            <button className='btnAdd' onClick={this.addDie.bind(this, diceColor)}>↑</button>
-            <button className='btnAdd' onClick={this.removeDie.bind(this, diceColor)}>↓</button>
-          </div>
-          <div className='dice-amount' style={{float: 'left', marginLeft: 10}}> {this.state.diceRoll[diceColor]}</div>
-          <div>
-              <img
-              className='dice'
-              key={diceColor}
-              style={{float: 'left', marginLeft: 15}}
-              onClick={this.addDie.bind(this, diceColor)}
-              src={`/images/${diceColor}.png`}
-              alt={`${diceColor}`} />
-          </div>
-        </div>
-      )}
-      <div className='dice-box' style={{marginLeft:6}}>
-        <div style={{float: 'left', marginLeft: 2, padding: 0}}>
-          <button className='btnAdd' onClick={this.addDie.bind(this, 'polyhedral')}>↑</button>
-          <button className='btnAdd' onClick={this.removeDie.bind(this, 'polyhedral')}>↓</button>
-        </div>
-        <div className='dice-amount' style={{float: 'left', marginLeft: 10}}> {this.state.diceRoll.polyhedral} </div>
-        <div>
-          <input className='textinput' style={{float: 'left', marginLeft: 15, width: '3em', textAlign: 'center', margin: '15px 0px 15px 25px'}} ref='polyhedral' defaultValue='100' />
-        </div>
+      <div>
+      <div className='row' style={{marginBottom: '8px'}}>
+        <button ref='extras' className='btn sm' aria-expanded={diceOrder.length > 7} onClick={this.expandExtras.bind(this)}>Symbols</button>
       </div>
-      <input type='button' ref='extras' className='lrgButton' style={{verticalAlign:'bottom', margin: '5px'}} onClick={this.expandExtras.bind(this)} value='Symbols' />
-
-      <div />
-
-      <div style={{display: 'inline-block'}}>
-        <input type='button' ref='roll' className='lrgButton' onClick={this.roll.bind(this)} value='Roll' />
-        <input className='textinput' ref='caption' name='caption' placeholder='caption' style={{width: '70px', paddingLeft: '5px'}}/>
+      <div className='pool'>
+        {diceOrder.slice(0, 7).map((diceColor) => dieCard(diceColor, this.state.diceRoll[diceColor], this.addDie.bind(this, diceColor), this.removeDie.bind(this, diceColor)))}
+        <div className={'die' + (this.state.diceRoll.polyhedral ? ' on' : '')}>
+          <input className='face' ref='polyhedral' defaultValue='100' aria-label='Polyhedral die sides' />
+          <div className='ctl'>
+            <button aria-label='Remove polyhedral die' onClick={this.removeDie.bind(this, 'polyhedral')}>&darr;</button>
+            <span className='n'>{this.state.diceRoll.polyhedral}</span>
+            <button aria-label='Add polyhedral die' onClick={this.addDie.bind(this, 'polyhedral')}>&uarr;</button>
+          </div>
+          <div className='dname'>Polyhedral (D-sides)</div>
+        </div>
+        {diceOrder.slice(7).map((diceColor) => dieCard(diceColor, this.state.diceRoll[diceColor], this.addDie.bind(this, diceColor), this.removeDie.bind(this, diceColor)))}
+      </div>
+      <div className='actions'>
+        <button ref='roll' className='btn primary roll' onClick={this.roll.bind(this)}>Roll</button>
+        <input className='field' ref='caption' name='caption' placeholder='Caption (optional)' aria-label='Caption' style={{gridColumn: '1 / -1'}}/>
       </div>
     </div>
     );

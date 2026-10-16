@@ -317,44 +317,48 @@ genKey() {
 
   render() {
     return (
-      <div>
-        <div className='destiny-box' style={{display: this.state.slideout, minHeight: '150px'}}>
-          <div style={{maxWidth: '90px', float: 'left', marginLeft: '6px'}}>
-            <button title='Add Initiative Slot' onClick={this.InitiativeAdd.bind(this)} className='btnAdd' style={{display: 'inline-block'}}>+</button>
-            <button title='Next Initiative Slot' onClick={this.InitiativeNext.bind(this)}className='btnAdd' style={{display: 'inline-block'}}>→</button>
-            <br/>
-            <button title='Remove Initiative Slot' onClick={this.InitiativeRemove.bind(this)} className='btnAdd' style={{display: 'inline-block'}}>-</button>
-            <button title='Previous Initiative Slot' onClick={this.InitiativePrevious.bind(this)}className='btnAdd' style={{display: 'inline-block'}}>←</button>
-            <br/>
-            <button title='Reset Initiative' type="button" className='lrgButton' style={{marginBottom: '0.25em', fontSize: '14px', background: '#9e9e9e', margin: '0', width: '58px', height: '20px'}} onClick={this.popupReset.bind(this)}>Reset</button>
-            <b>Round: {this.state.position.round}<br/>Turn: {this.state.position.turn}</b>
+      <div className='panel' aria-label='Initiative tracker'>
+        <h2>Initiative
+          <span className='grow'>
+            <button title='Click to Show/Hide Initiative Tracker' type="button" className='btn sm' aria-expanded={this.state.slideout !== 'none'} onClick={this.slideOut.bind(this)}>{this.state.slideout !== 'none' ? 'Hide' : 'Show'}</button>
+          </span>
+        </h2>
+        <div style={{display: this.state.slideout}}>
+          <div className='row' style={{marginBottom: '10px'}}>
+            <button title='Previous Initiative Slot' aria-label='Previous Initiative Slot' onClick={this.InitiativePrevious.bind(this)} className='btn sm'>&larr;</button>
+            <button title='Next Initiative Slot' aria-label='Next Initiative Slot' onClick={this.InitiativeNext.bind(this)} className='btn sm'>&rarr;</button>
+            <button title='Add Initiative Slot' aria-label='Add Initiative Slot' onClick={this.InitiativeAdd.bind(this)} className='btn sm'>+</button>
+            <button title='Remove Initiative Slot' aria-label='Remove Initiative Slot' onClick={this.InitiativeRemove.bind(this)} className='btn sm'>&minus;</button>
+            <button title='Reset Initiative' type="button" className='btn sm' onClick={this.popupReset.bind(this)}>Reset</button>
+            <span className='round'>Round {this.state.position.round} · Turn {this.state.position.turn}</span>
           </div>
-          <div style={{marginLeft: '90px'}}>
+          <div className='row' style={{paddingTop: '8px'}}>
             {this.state.Initiative.map((slot)=>
-              <div style={{display: 'inline-block', height: '50px', width:'50px'}} key={slot.key}>
-                <div style={{position: 'absolute'}}>
+              <div className='initslot' key={slot.key}>
+                <span className='bonus'>
                 {slot.bonusDie.reverse().map((type)=>
-                  <img src={`/images/${type}.png`} alt={type} key={this.genKey()} className='tinydie' />
+                  <i className={'pip ' + type} title={type} key={this.genKey()} />
                 )}
-                </div>
-              <img title='Click to Modify Initiative Slot' src={`/images/${slot.type}.png`} alt={slot.type} className='tokens' style={{height: '45px', width:'45px'}} onClick={this.popupModifyInitiativeSlot.bind(this, slot, 'current')} />
+                </span>
+                <button title='Click to Modify Initiative Slot' className={'token ' + slot.type} onClick={this.popupModifyInitiativeSlot.bind(this, slot, 'current')}>{slot.type === 'pc' ? 'PC' : 'NPC'}</button>
               </div>
             )}
-            <img src={`/images/repeat.png`} alt='' className='tokens' style={{height: '45px', width:'45px'}}/>
+            {this.state.Initiative.length + this.state.InitiativePast.length === 0
+              ? <span className='empty'>No initiative slots yet</span>
+              : <span className='repeat' aria-label='Round repeats'>&#x21BB;</span>}
             {this.state.InitiativePast.map((slot)=>
-              <div style={{display: 'inline-block', height: '50px', width:'50px'}} key={slot.key}>
-              <div style={{position: 'absolute'}}>
-              {slot.bonusDie.reverse().map((type)=>
-                <img src={`/images/${type}.png`} alt={type} key={this.genKey()} className='tinydie' />
-              )}
-              </div>
-              <img title='Click to Modify Initiative Slot' src={`/images/${slot.type}.png`} alt={slot.type} className='tokens' style={{height: '45px', width:'45px'}} onClick={this.popupModifyInitiativeSlot.bind(this, slot, 'past')} />
+              <div className='initslot' key={slot.key}>
+                <span className='bonus'>
+                {slot.bonusDie.reverse().map((type)=>
+                  <i className={'pip ' + type} title={type} key={this.genKey()} />
+                )}
+                </span>
+                <button title='Click to Modify Initiative Slot' className={'token past ' + slot.type} onClick={this.popupModifyInitiativeSlot.bind(this, slot, 'past')}>{slot.type === 'pc' ? 'PC' : 'NPC'}</button>
               </div>
             )}
           </div>
         </div>
-        <button title='Click to Show/Hide Initiative Tracker' type="button" style={{margin: '0.5em', fontSize: '14px', height: '15px', width: '55px'}}onClick={this.slideOut.bind(this)} className='lrgButton'>Initiative</button>
-    </div>
+      </div>
     );
   }
 }

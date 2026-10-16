@@ -74,12 +74,13 @@ class selectReRoll extends Component {
   render() {
     return (
       <div>
+        <p>Tap the dice to roll again.</p>
         {this.state.displayFaces.map((file)=>
           <div key={file.key} className='dice rerollselect' style={{backgroundImage: `url(${file.path})`}} onClick={this.selectDice.bind(this, file)}><img className='dice repeatselect' src={'/images/repeat.png'} alt='' style={{display: this.state.displayRepeat[file.key]}} /></div>
         )}
-        <div style={{display: 'block', marginTop: '10px'}}>
-          <input type='button' ref='roll' className='lrgButton' onClick={this.roll.bind(this)} value='Roll' />
-          <input className='textinput' ref='caption' name='caption' placeholder='caption' style={{width: '150px', paddingLeft: '5px'}}/>
+        <div className='row' style={{marginTop: '10px'}}>
+          <input className='field' ref='caption' name='caption' placeholder='Caption' aria-label='Caption' style={{flex: 1, width: 'auto'}}/>
+          <button ref='roll' className='btn primary' onClick={this.roll.bind(this)}>Roll</button>
         </div>
       </div>
 

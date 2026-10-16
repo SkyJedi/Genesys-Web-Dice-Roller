@@ -13,21 +13,24 @@ class Channel extends Component {
 
   render() {
     return (
-      <div className='login-box'>
-      <h1>D1-C3</h1> <div />
-      <img src={`/favicon.png`} alt='' style={{maxWidth:'225px'}} />
+      <div className='entry-page'>
+      <main className='card'>
+      <img className='logo' src={`/favicon.png`} alt='' />
+      <h1>D1-C3</h1>
+      <p className='tag'>Dice roller and table assistant for Genesys</p>
       <form onSubmit={this.setChannel.bind(this)}>
-        <input className='textinput' style={{textAlign: 'center'}} ref="channel" name="channel" placeholder="Channel Name" /> <div />
-        <input className='textinput' style={{textAlign: 'center'}} ref="user" name="user" placeholder="User Name" />
-        <div>
-        <button className='lrgButton'>Enter</button>
-        </div>
+        <label htmlFor='channel'>Channel name</label>
+        <input id='channel' ref="channel" name="channel" placeholder="Channel Name" autoComplete='off' />
+        <label htmlFor='user'>Your name</label>
+        <input id='user' ref="user" name="user" placeholder="User Name" autoComplete='off' />
+        <button>Enter</button>
       </form>
-        <div style={{paddingTop: '2em'}}>
-          <span>Created by SkyJedi</span> <br/><br/>
-          <span>Questions? Comments? <a href="mailto:skyjedi@gmail.com?subject=D1-C3%20Feedback">Contact Me</a></span> <div />
-          <h6>An assistant (dice roller, chat, Story Point tracker, character tracker, initiative tracker) for Fantasy Flight Games, Genesys</h6>
-        </div>
+        <p className='foot'>
+          Created by SkyJedi<br/>
+          Questions? Comments? <a href="mailto:skyjedi@gmail.com?subject=D1-C3%20Feedback">Contact Me</a><br/><br/>
+          An assistant (dice roller, chat, Story Point tracker, character tracker, initiative tracker) for Fantasy Flight Games, Genesys
+        </p>
+      </main>
       </div>
     );
   }

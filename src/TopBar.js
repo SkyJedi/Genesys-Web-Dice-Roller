@@ -4,7 +4,8 @@ import * as firebase from 'firebase';
 import './index.css';
 import './popup.css';
 
-var channel = window.location.pathname.slice(1).toLowerCase();
+var channel = window.location.pathname.slice(1).toLowerCase(),
+    user = window.location.search.slice(1);
 
 class TopBar extends Component {
 
@@ -45,13 +46,24 @@ newSession() {
 
 }
 
+toggleMenu() {
+  this.setState({menu: !this.state.menu});
+}
+
 render() {
   return (
-    <div>
-      <button className='btnAdd' style={{float: 'right', width: '70px', marginRight: '3px', fontSize: '70%'}} onClick={this.newSession.bind(this)}>New Session</button>
-      <button className='btnAdd' style={{float: 'right', width: '70px', marginRight: '3px', fontSize: '70%'}} onClick={this.popupDeleteChannel.bind(this)}>Delete Channel</button>
-      <button className='btnAdd' style={{float: 'right', width: '70px', marginRight: '3px'}} onClick={this.signOut.bind(this)}>Logout</button>
-  </div>
+    <header className='topbar'>
+      <span className='brand'>D1-C3</span>
+      <span className='who'>Channel <b>{channel}</b> · playing as <b>{user}</b></span>
+      <div className={'menu' + (this.state.menu ? ' open' : '')}>
+        <button className='btn' aria-haspopup='true' aria-expanded={!!this.state.menu} onClick={this.toggleMenu.bind(this)}>Session &#x25BE;</button>
+        <div className='menu-list' role='menu' onClick={this.toggleMenu.bind(this)}>
+          <button role='menuitem' onClick={this.newSession.bind(this)}>New Session</button>
+          <button role='menuitem' className='danger' onClick={this.popupDeleteChannel.bind(this)}>Delete Channel&hellip;</button>
+        </div>
+      </div>
+      <button className='btn' onClick={this.signOut.bind(this)}>Logout</button>
+    </header>
   );
 }
 }

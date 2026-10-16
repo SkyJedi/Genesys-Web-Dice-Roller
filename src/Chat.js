@@ -105,21 +105,21 @@ class Chat extends Component {
 
   render() {
     return (
-      <div className='App' style={{margin: '5px'}}>
-        <form ref='chatForm' onSubmit={this.sendchat.bind(this)}>
-        <input className='textinput' style={{width:'285px', margin: '0px'}} ref='chatInput' required/>
-        <button ref='send' className='lrgButton' style={{width:'45px', margin: '0 0 0 2px'}}>Send</button>
+      <div className='panel grow-panel'>
+        <h2>Chat <span className='grow'><button className='btn sm' onClick={this.clear.bind(this)}>Clear</button></span></h2>
+        <form className='chatform' ref='chatForm' onSubmit={this.sendchat.bind(this)}>
+        <input className='field' ref='chatInput' required placeholder='Say something&hellip; [blue] shows a die' aria-label='Chat message'/>
+        <button ref='send' className='btn primary'>Send</button>
         </form>
-        <div className='messagebox' style={{maxHeight: '350px', maxWidth: '350px'}}>
+        <div>
+          {Object.keys(this.state.chat).length === 0 && <div className='empty'>No chat yet.</div>}
           {Object.entries(this.state.chat).reverse().map(([k,v])=>
-            <div className='message' style={{maxWidth: '18em', minHeight: '0px', lineHeight: 1.2}} key={k}>
-            <button onClick={this.popupDeleteMessage.bind(this, k)} style={{float: 'right', height: '20px', width: '20px', background: 'none', color: '#969595', fontSize: '12px', border: 'none'}}>X</button>
+            <div className='msg' key={k}>
+            <button className='x' aria-label='Delete chat message' onClick={this.popupDeleteMessage.bind(this, k)}>&#x2715;</button>
             <div dangerouslySetInnerHTML={{ __html: v }} />
             </div>
           )}
-          <button className='btnAdd' style={{float: 'right', width: '70px', marginRight: '3px', fontSize: '70%'}} onClick={this.clear.bind(this)}>Clear</button>
         </div>
-
       </div>
     );
   }

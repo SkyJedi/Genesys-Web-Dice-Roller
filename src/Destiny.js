@@ -75,22 +75,22 @@ class Destiny extends Component {
 
   render() {
     return (
-      <div className='App' style={{width: '525px'}}>
-        <div className="destiny-box">
-          <div style={{float: 'left', marginLeft: 6}}>
-            <button className='btnAdd' title='Add Destiny Point'onClick={this.destinyAdd.bind(this)}>+</button>
-            <button className='btnAdd' title='Remove Destiny Point'onClick={this.destinyRemove.bind(this)}>-</button>
-            <button className='btnAdd' title='Reset Destiny' style={{background: '#9e9e9e'}} onClick={this.destinyReset.bind(this)}>X</button>
-
-          </div>
-          <div style={{marginLeft: '60px'}}>
-            {Object.entries(this.state.destinyPoint).map(([k,v])=>
-              <span key={k} onClick={this.flip.bind(this, v, k)}>
-              <img className='tokens' title='Click to flip Destiny Point' style={{padding: '5px 0 0 1px'}}src={`/images/${v}.png`} alt={v} />
-              </span>
-            )}
-          </div>
-
+      <div className='panel' aria-label='Destiny pool'>
+        <h2>Destiny pool
+          <span className='grow'>
+            <button className='btn sm' title='Add Destiny Point' aria-label='Add Destiny Point' onClick={this.destinyAdd.bind(this)}>+</button>
+            <button className='btn sm' title='Remove Destiny Point' aria-label='Remove Destiny Point' onClick={this.destinyRemove.bind(this)}>&minus;</button>
+            <button className='btn sm' title='Reset Destiny' onClick={this.destinyReset.bind(this)}>Reset</button>
+          </span>
+        </h2>
+        <div className='row'>
+          {Object.keys(this.state.destinyPoint).length === 0 && <span className='empty'>No destiny points yet</span>}
+          {Object.entries(this.state.destinyPoint).map(([k,v])=>
+            <button key={k} className={'token ' + (v === 'lightside' ? 'light' : 'dark')} title='Click to flip Destiny Point'
+              aria-label={(v === 'lightside' ? 'Light' : 'Dark') + ' side point, click to flip'} onClick={this.flip.bind(this, v, k)}>
+              {v === 'lightside' ? '\u25CB' : '\u25CF'}
+            </button>
+          )}
         </div>
       </div>
     );
