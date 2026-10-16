@@ -39,7 +39,7 @@ a { color: var(--accent); }
 
 /* ---------- shell ---------- */
 .app { display: flex; flex-direction: column; height: 100vh; }
-.topbar { display: flex; align-items: center; gap: 8px; padding: 8px var(--gap); background: var(--panel); border-bottom: 1px solid var(--line); }
+.topbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px var(--gap); background: var(--panel); border-bottom: 1px solid var(--line); }
 .brand { font-weight: 800; letter-spacing: .08em; }
 .who { color: var(--muted); font-size: .9rem; margin-right: auto; }
 .btn { min-height: var(--tap); min-width: var(--tap); padding: 0 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel-2); font-weight: 600; }

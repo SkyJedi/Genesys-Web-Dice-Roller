@@ -3,6 +3,7 @@ import Popup from 'react-popup';
 import * as firebase from 'firebase';
 import './index.css';
 import './popup.css';
+import { diceArt, setDiceArt } from './functions/diceArt';
 
 var channel = window.location.pathname.slice(1).toLowerCase(),
     user = window.location.search.slice(1);
@@ -55,6 +56,10 @@ render() {
     <header className='topbar'>
       <span className='brand'>D1-C3</span>
       <span className='who'>Channel <b>{channel}</b> · playing as <b>{user}</b></span>
+      <label className='switch' title='Show Star Wars (SWRPG) dice pictures instead of Genesys'>
+        <input type='checkbox' defaultChecked={diceArt() === 'swrpg'} onChange={(e) => setDiceArt(e.target.checked ? 'swrpg' : 'genesys')} />
+        <span className='track'></span>Star Wars dice
+      </label>
       <div className={'menu' + (this.state.menu ? ' open' : '')}>
         <button className='btn' aria-haspopup='true' aria-expanded={!!this.state.menu} onClick={this.toggleMenu.bind(this)}>Session &#x25BE;</button>
         <div className='menu-list' role='menu' onClick={this.toggleMenu.bind(this)}>

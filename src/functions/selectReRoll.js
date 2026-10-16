@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import '../index.css';
 const escapeHtml = require("./safeHtml.js").escapeHtml;
+const artSrc = require("./diceArt.js").artSrc;
 var rolldice = require("./Roll.js"),
     user = window.location.search.slice(1),
     channel = window.location.pathname.slice(1).toLowerCase(),
@@ -77,7 +78,7 @@ class selectReRoll extends Component {
       <div>
         <p>Tap the dice to roll again.</p>
         {this.state.displayFaces.map((file)=>
-          <div key={file.key} className='dice rerollselect' style={{backgroundImage: `url(${file.path})`}} onClick={this.selectDice.bind(this, file)}><img className='dice repeatselect' src={'/images/repeat.png'} alt='' style={{display: this.state.displayRepeat[file.key]}} /></div>
+          <div key={file.key} className='dice rerollselect' style={{backgroundImage: `url(${artSrc(file.path)})`}} onClick={this.selectDice.bind(this, file)}><img className='dice repeatselect' src={'/images/repeat.png'} alt='' style={{display: this.state.displayRepeat[file.key]}} /></div>
         )}
         <div className='row' style={{marginTop: '10px'}}>
           <input className='field' ref='caption' name='caption' placeholder='Caption' aria-label='Caption' style={{flex: 1, width: 'auto'}}/>

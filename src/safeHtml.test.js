@@ -33,6 +33,17 @@ it('the markup the app writes still shows', () => {
   expect(cleanHtml('bob 42<p>Minor nick</p>')).toBe('bob 42<p>Minor nick</p>');
 });
 
+it('the Star Wars dice switch swaps die and symbol pictures only', () => {
+  window.localStorage.setItem('diceArt', 'swrpg');
+  const out = cleanHtml('<img src=/images/dice/yellow-!s.png><img src=/images/fail.png><img src=/images/crest.png><img src=/images/upgrade.png>');
+  window.localStorage.removeItem('diceArt');
+  expect(out).toContain('src="/images/swrpg/dice/yellow-!s.png"');
+  expect(out).toContain('src="/images/swrpg/fail.png"');
+  expect(out).toContain('src="/images/crest.png"');
+  expect(out).toContain('src="/images/upgrade.png"');
+  expect(cleanHtml('<img src=/images/fail.png>')).toContain('src="/images/fail.png"');
+});
+
 it('character bonus-die icons keep their picture and lose anything else', () => {
   const icons = "<img src='/images/blue.png' alt='blue.png' style='height: 15px' width: 15px;'/>"
     + "<img src='/images/black.png' alt='black.png' style='height: 15px; width: 15px;'/>";
