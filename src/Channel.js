@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './index.css';
+import Feedback from './Feedback';
 
 class Channel extends Component {
 
@@ -27,9 +28,9 @@ class Channel extends Component {
       </form>
         <p className='foot'>
           Created by SkyJedi<br/>
-          Questions? Comments? <a href="mailto:skyjedi@gmail.com?subject=D1-C3%20Feedback">Contact Me</a><br/><br/>
           An assistant (dice roller, chat, Story Point tracker, character tracker, initiative tracker) for Fantasy Flight Games, Genesys
         </p>
+        <Feedback getUser={() => this.refs.user.value.trim()} />
       </main>
       </div>
     );
