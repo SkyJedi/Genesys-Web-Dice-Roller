@@ -2,6 +2,8 @@ import React from 'react';
 import Popup from 'react-popup';
 import ModifyDicePool from './modifyDicePool';
 import SelectReRoll from './selectReRoll';
+import Fortune from './fortune';
+const fortuneDice = require("./fortuneFaces.js").fortuneDice;
 import * as firebase from 'firebase';
 var rolldice = require("./Roll.js");
 import '../popup.css';
@@ -39,7 +41,14 @@ function reRoll(message) {
               Popup.close();
             }
         }
-        ]
+        ].concat(fortuneDice.some((color) => message[color] !== undefined) ? [{
+            text: 'Unmatched Fortune',
+            className: 'ReRoll',
+            action: () => {
+              unmatchedFortune(message);
+              Popup.close();
+            }
+        }] : [])
   }});
 }
 
@@ -51,6 +60,7 @@ function rebuiltdiceRoll(message) {
   delete message.text;
   delete message.rolledSymbols;
   Object.keys(message).forEach((color)=>{
+    if (color === 'faces') return;
     rebuilt.diceRoll[color] = message[color].length;
   });
   return rebuilt;
@@ -76,6 +86,15 @@ function selectDice(message) {
       title: 'Modify Dice Pool',
       className: 'rerollselect',
       content: <SelectReRoll rollResults={message} rebuilt={rebuilt} popupClose={Popup.close}/>,
+  });
+}
+
+function unmatchedFortune(message) {
+  let rebuilt = rebuiltdiceRoll(message);
+  Popup.create({
+      title: 'Unmatched Fortune',
+      className: 'rerollselect',
+      content: <Fortune rollResults={message} rebuilt={rebuilt} popupClose={Popup.close}/>,
   });
 }
 

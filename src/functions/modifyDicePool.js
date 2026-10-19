@@ -82,15 +82,28 @@ class modifyDicePool extends Component {
     let diceRoll = {};
     diceRoll[color] = modifiedRoll[color];
     if (rollResults[color] === undefined) rollResults[color]=[];
-    rollResults[color] = rollResults[color].concat(rolldice.rollDicePool(diceRoll)[color]);
+    let rolled = rolldice.rollDicePool(diceRoll);
+    if (rolled.faces) {
+      // an old message (no faces) gets them only for its new dice, so keep the lists the same length
+      if (rollResults.faces === undefined) rollResults.faces = {};
+      if (rollResults.faces[color] === undefined || rollResults.faces[color].length !== rollResults[color].length) rollResults.faces[color] = rollResults[color].map(() => -1);
+      rollResults.faces[color] = rollResults.faces[color].concat(rolled.faces[color]);
+    }
+    rollResults[color] = rollResults[color].concat(rolled[color]);
     return rollResults;
   }
 
   deleteDie(modifiedRoll, color, rollResults) {
-    if (modifiedRoll[color]+rollResults[color].length===0) delete rollResults[color];
+    let faces = rollResults.faces ? rollResults.faces[color] : undefined;
+    if (modifiedRoll[color]+rollResults[color].length===0) {
+      delete rollResults[color];
+      if (faces) delete rollResults.faces[color];
+    }
     else {
       for(var i=0; i>modifiedRoll[color]; i--) {
-        rollResults[color].splice(dice(rollResults[color].length)-1, 1)
+        let gone = dice(rollResults[color].length)-1;
+        rollResults[color].splice(gone, 1);
+        if (faces && faces.length === rollResults[color].length + 1) faces.splice(gone, 1);
       }
     }
     return rollResults;

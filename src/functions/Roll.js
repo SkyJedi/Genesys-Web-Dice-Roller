@@ -30,9 +30,7 @@ function roll(diceRoll, polyhedralValue, caption, user) {
   return rollResults;
 }
 
-function rollDicePool(diceRoll) {
-  let rollResults = {};
-  let diceFaces = {
+const diceFaces = {
             yellow: ['', 's', 's', 'ss', 'ss', 'a', 'sa', 'sa', 'sa', 'aa', 'aa', '!s'],
             green: ['', 's', 's', 'ss', 'a', 'a', 'sa', 'aa'],
             blue: ['', '', 's', 'sa', 'aa', 'a'],
@@ -49,12 +47,22 @@ function rollDicePool(diceRoll) {
             lightside: 'l',
             darkside: 'n',
           };
+
+function rollDicePool(diceRoll) {
+  let rollResults = {};
   //roll dice and match them to a side and add that face to the message
   Object.keys(diceFaces).forEach((color)=>{
     if (diceRoll[color] === undefined) return;
     rollResults[color] = [];
     for (var k = 0; k < diceRoll[color]; k++) {
-        if (color === 'yellow' || color === 'green' ||  color === 'blue' ||  color === 'red' ||  color === 'purple' ||  color === 'black' || color === 'white') rollResults[color].push(diceFaces[color][dice(diceFaces[color].length)-1]);
+        if (color === 'yellow' || color === 'green' ||  color === 'blue' ||  color === 'red' ||  color === 'purple' ||  color === 'black' || color === 'white') {
+          let face = dice(diceFaces[color].length)-1;
+          rollResults[color].push(diceFaces[color][face]);
+          //which face came up, not just its symbols: twin faces have different neighbours (Unmatched Fortune)
+          if (rollResults.faces === undefined) rollResults.faces = {};
+          if (rollResults.faces[color] === undefined) rollResults.faces[color] = [];
+          rollResults.faces[color].push(face);
+        }
         else rollResults[color].push(diceFaces[color]);
       }
   })
@@ -158,4 +166,5 @@ module.exports = {
     rollDicePool: rollDicePool,
     rollPolyhedral: rollPolyhedral,
     countSymbols: countSymbols,
+    diceFaces: diceFaces,
 };

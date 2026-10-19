@@ -45,7 +45,9 @@ class selectReRoll extends Component {
       Object.keys(reRoll).forEach((key)=>{
         let diceRoll = {};
         diceRoll[reRoll[key].color] = 1;
-        rollResults[reRoll[key].color].splice(reRoll[key].position, 1, rolldice.rollDicePool(diceRoll)[reRoll[key].color][0]);
+        let color = reRoll[key].color, rerolled = rolldice.rollDicePool(diceRoll);
+        rollResults[color].splice(reRoll[key].position, 1, rerolled[color][0]);
+        if (rollResults.faces && rollResults.faces[color] && rerolled.faces) rollResults.faces[color].splice(reRoll[key].position, 1, rerolled.faces[color][0]);
       })
       rollResults.text = `<span> ${escapeHtml(user)} rerolled selected dice </span>`;
       rollResults = rolldice.countSymbols(rollResults, user);
