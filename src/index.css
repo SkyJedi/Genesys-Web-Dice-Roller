@@ -9,6 +9,7 @@
   --d-purple: #7c4dde; --d-black: #262a33; --d-white: #ffffff;
   /* result symbols */
   --sym-good: #4cd08a; --sym-bad: #ff7b7b; --sym-triumph: #f2c230; --sym-despair: #ff4d4d;
+  --sym-dark-bg: #d9dce3; --sym-dark-border: #8b93a8;
   /* sizes */
   --radius: 14px; --gap: 12px; --tap: 44px;
   --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -165,6 +166,7 @@ input.face { border: 1px solid var(--line); background: var(--bg); text-align: c
 .entry img.diceface, .msg img.diceface { width: 44px; height: 44px; vertical-align: middle; margin: 2px 1px; }
 .entry span[title] { display: inline-block; margin-top: 4px; padding: 4px 12px; border-radius: 22px; background: var(--text); color: var(--bg); border: 1px solid var(--line); }
 .entry span[title] img.diceface { width: 52px; height: 52px; }
+.entry img.diceface[src$="/darkside.png"] { background: var(--sym-dark-bg); border: 1px solid var(--sym-dark-border); border-radius: 8px; }
 .entry p { margin: 6px 0 0; }
 .x { position: absolute; top: 4px; right: 4px; width: 36px; height: 36px; background: none; border: 0; color: var(--muted); border-radius: 8px; }
 .x:hover { color: var(--danger); }
