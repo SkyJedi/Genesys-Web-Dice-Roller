@@ -1,6 +1,6 @@
 {
   "name": "genesys-web-dice-roller",
-  "version": "1.7.2",
+  "version": "1.7.3",
   "private": true,
   "dependencies": {
     "firebase": "^3.9.0",

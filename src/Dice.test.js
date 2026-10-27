@@ -12,7 +12,7 @@ it('each die colour draws its d12, d8 or d6 shape with facets', () => {
 
 it('die cards show their symbols and arrow buttons', () => {
   const html = renderToStaticMarkup(dieCard('triumph', 2, () => {}, () => {}));
-  expect(html).toContain('★');
+  expect(html).toContain('src="/images/triumph.png"');
   expect(html).toContain('↓');
   expect(html).toContain('↑');
   expect(html).toContain('<span class="n">2</span>');

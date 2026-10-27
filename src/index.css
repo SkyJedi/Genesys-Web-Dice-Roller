@@ -164,7 +164,8 @@ input.face { border: 1px solid var(--line); background: var(--bg); text-align: c
 .entry.divider { text-align: center; color: var(--muted); border-style: dashed; overflow: hidden; white-space: nowrap; }
 .entry .body { cursor: pointer; }
 .entry img.diceface, .msg img.diceface { width: 44px; height: 44px; vertical-align: middle; margin: 2px 1px; }
-.entry span[title] { display: inline-block; margin-top: 4px; padding: 4px 12px; border-radius: 22px; background: #e6e8ec; color: #1c2026; border: 1px solid var(--line); }
+.entry span[title] { display: inline-block; margin-top: 4px; padding: 4px 12px; border-radius: 22px; background: #c4c6cb; color: #111318; border: 1px solid #8f93a0; }
+.glyph .symart { width: 40px; height: 40px; }
 .entry span[title] img.diceface { width: 52px; height: 52px; }
 .entry img.diceface[src$="/darkside.png"] { background: var(--sym-dark-bg); border: 1px solid var(--sym-dark-border); border-radius: 8px; }
 .entry p { margin: 6px 0 0; }
