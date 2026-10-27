@@ -18,7 +18,7 @@ class Channel extends Component {
       <main className='card'>
       <img className='logo' src={`/favicon.png`} alt='' />
       <h1>D1-C3</h1>
-      <p className='tag'>Dice roller and table assistant for Genesys</p>
+      <p className='tag'>Dice roller and table assistant for tabletop RPGs</p>
       <form onSubmit={this.setChannel.bind(this)}>
         <label htmlFor='channel'>Channel name</label>
         <input id='channel' ref="channel" name="channel" placeholder="Channel Name" autoComplete='off' />

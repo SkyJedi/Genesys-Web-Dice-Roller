@@ -1,17 +1,48 @@
-/* D1-C3 "ship's console" theme. Variables lifted from Pattern's mockup (desks/pattern/work/dice/table.html + entry.html). */
+/* Themes: the default is a plain white design; [data-theme] on <html> (functions/theme.js) swaps the colour variables. */
 :root {
   /* surfaces and text */
-  --bg: #0c1220; --bg-glow: #17264a; --panel: #131c33; --panel-2: #1a2646; --line: #2a3a63;
-  --text: #e8edf8; --muted: #9db0d4;
-  --accent: #3da9fc; --accent-ink: #04131f; --danger: #ff6b6b; --good: #4cd08a;
+  --bg: #f4f5f7; --bg-glow: #ffffff; --panel: #ffffff; --panel-2: #f0f2f5; --line: #d5d9e0;
+  --text: #1c2026; --muted: #5d6673; --track: #aab1bd; --current: #e6eefb; --portrait-a: #e1e6ee; --portrait-b: #cdd5e1;
+  --accent: #2563eb; --accent-ink: #ffffff; --danger: #d13438; --good: #1f8f55;
   /* the seven dice */
-  --d-yellow: #f2c230; --d-green: #3fb950; --d-blue: #4aa3ff; --d-red: #e5484d;
-  --d-purple: #9b6bff; --d-black: #20232b; --d-white: #f4f4f8;
+  --d-yellow: #e0a800; --d-green: #2e9e4f; --d-blue: #2f8fe0; --d-red: #d83a3f;
+  --d-purple: #7c4dde; --d-black: #262a33; --d-white: #ffffff;
   /* result symbols */
   --sym-good: #4cd08a; --sym-bad: #ff7b7b; --sym-triumph: #f2c230; --sym-despair: #ff4d4d;
   /* sizes */
   --radius: 14px; --gap: 12px; --tap: 44px;
   --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+[data-theme="dark"] {
+  --bg: #0f1115; --bg-glow: #1a1d24; --panel: #181b21; --panel-2: #20242c; --line: #333945;
+  --text: #eceef2; --muted: #9aa3b2; --track: #55606f; --current: #26334d; --portrait-a: #2b3342; --portrait-b: #1a1f29;
+  --accent: #6ea8ff; --accent-ink: #0b1220; --danger: #ff6b6b; --good: #4cd08a;
+  --d-black: #3a3f4b; --d-white: #f4f4f8;
+}
+[data-theme="coruscant"] {
+  --bg: #0e1424; --bg-glow: #1d2744; --panel: #151d33; --panel-2: #1d2744; --line: #2d3b63;
+  --text: #e8edf8; --muted: #9db0d4; --track: #4a5c88; --current: #24335c; --portrait-a: #2a3a66; --portrait-b: #151d33;
+  --accent: #3da9fc; --accent-ink: #04131f; --danger: #ff7b7b; --good: #4cd08a; --d-black: #3a4258;
+}
+[data-theme="tatooine"] {
+  --bg: #f6ead4; --bg-glow: #fff6e4; --panel: #fff6e4; --panel-2: #f0dfbd; --line: #d9c294;
+  --text: #3a2a12; --muted: #6e5a38; --track: #b8a070; --current: #f3e3c0; --portrait-a: #ead7ae; --portrait-b: #d9c294;
+  --accent: #b4571d; --accent-ink: #ffffff;
+}
+[data-theme="endor"] {
+  --bg: #eaf1e4; --bg-glow: #f7fbf3; --panel: #f7fbf3; --panel-2: #dce8d2; --line: #b8cda8;
+  --text: #1d2b17; --muted: #4d6144; --track: #8fa87e; --current: #e0ecd6; --portrait-a: #d2e2c4; --portrait-b: #b8cda8;
+  --accent: #2f7a3a; --accent-ink: #ffffff;
+}
+[data-theme="mustafar"] {
+  --bg: #1a0e0b; --bg-glow: #331d14; --panel: #26150f; --panel-2: #331d14; --line: #5a3022;
+  --text: #f6e6dd; --muted: #c9a595; --track: #86523d; --current: #43251a; --portrait-a: #4a2a1d; --portrait-b: #26150f;
+  --accent: #ff6a2b; --accent-ink: #1a0900; --danger: #ff7b6b; --good: #8be0a4; --d-black: #4a3a36;
+}
+[data-theme="hoth"] {
+  --bg: #eaf3fa; --bg-glow: #ffffff; --panel: #ffffff; --panel-2: #dcebf6; --line: #bcd3e5;
+  --text: #10263a; --muted: #4a647c; --track: #8fb0c9; --current: #e3f0fa; --portrait-a: #d3e5f3; --portrait-b: #bcd3e5;
+  --accent: #0e7fc0; --accent-ink: #ffffff;
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; height: 100%; }
@@ -96,10 +127,16 @@ a { color: var(--accent); }
 .face { width: 54px; height: 54px; padding: 0; background: none; border: 0; border-radius: 10px; }
 .face svg { width: 100%; height: 100%; display: block; }
 input.face { border: 1px solid var(--line); background: var(--bg); text-align: center; font-weight: 800; }
-.shape { stroke: #00000055; stroke-width: 2; }
+.shape { --facet: #fff; }
+.shape .out { stroke: var(--edge, none); stroke-width: 2.2; stroke-linejoin: round; }
 .shape.yellow { fill: var(--d-yellow); } .shape.green { fill: var(--d-green); } .shape.blue { fill: var(--d-blue); }
-.shape.red { fill: var(--d-red); } .shape.purple { fill: var(--d-purple); } .shape.white { fill: var(--d-white); }
-.shape.black { fill: var(--d-black); stroke: #7d8bb3; }
+.shape.red { fill: var(--d-red); } .shape.purple { fill: var(--d-purple); } .shape.black { fill: var(--d-black); }
+.shape.white { fill: var(--d-white); --edge: #0b0b0f; --facet: #0b0b0f; }
+.shape .facet { fill: none; stroke: var(--facet); stroke-opacity: .75; stroke-width: 1.7; stroke-linejoin: round; stroke-linecap: round; }
+.shape .facet.soft { stroke-opacity: .5; }
+.pool.symbols { margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px dashed var(--line); }
+.pick { display: inline-flex; align-items: center; gap: 6px; font-size: .85rem; color: var(--muted); }
+.pick .field { width: auto; min-height: var(--tap); }
 .ctl { display: grid; grid-template-columns: 36px 1fr 36px; align-items: center; text-align: center; }
 .ctl button { min-height: 36px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); font-size: 1.1rem; }
 .ctl .n { font-size: 1.5rem; font-weight: 800; }
@@ -110,7 +147,7 @@ input.face { border: 1px solid var(--line); background: var(--bg); text-align: c
 .field { width: 100%; min-height: var(--tap); padding: 0 12px; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; }
 .switch { display: inline-flex; align-items: center; gap: 8px; min-height: var(--tap); cursor: pointer; position: relative; }
 .switch input { position: absolute; opacity: 0; }
-.switch .track { width: 46px; height: 26px; border-radius: 13px; background: #54618a; position: relative; transition: background .2s; }
+.switch .track { width: 46px; height: 26px; border-radius: 13px; background: var(--track); position: relative; transition: background .2s; }
 .switch .track::after { content: ""; position: absolute; left: 3px; top: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: left .2s; }
 .switch input:checked + .track { background: var(--accent); }
 .switch input:checked + .track::after { left: 23px; }
@@ -135,7 +172,7 @@ input.face { border: 1px solid var(--line); background: var(--bg); text-align: c
 
 /* ---------- character + chat ---------- */
 .char-top { display: grid; grid-template-columns: 76px 1fr; gap: 12px; align-items: center; }
-.portrait { width: 76px; height: 76px; border-radius: 14px; background: linear-gradient(135deg, #2a3a63, #17264a); border: 1px solid var(--line); padding: 0; overflow: hidden; }
+.portrait { width: 76px; height: 76px; border-radius: 14px; background: linear-gradient(135deg, var(--portrait-a), var(--portrait-b)); border: 1px solid var(--line); padding: 0; overflow: hidden; }
 .portrait img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .cname { font-size: 1.4rem; font-weight: 800; }
 .incap { color: var(--danger); font-weight: 800; letter-spacing: .06em; text-transform: uppercase; font-size: .85rem; }
@@ -152,7 +189,7 @@ input.face { border: 1px solid var(--line); background: var(--bg); text-align: c
 .party { width: 100%; border-collapse: collapse; font-size: .92rem; }
 .party th { text-align: left; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 4px 6px; }
 .party td { padding: 4px 6px; border-top: 1px solid var(--line); cursor: pointer; }
-.party tr.cur td { background: #1c2b52; }
+.party tr.cur td { background: var(--current); }
 .party td button { background: none; border: 0; padding: 0 2px; min-height: 36px; text-align: left; font-weight: 600; }
 .party td img { width: 15px; height: 15px; vertical-align: middle; }
 .chatform { display: flex; gap: 8px; margin-bottom: 10px; }

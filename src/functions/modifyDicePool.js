@@ -7,7 +7,8 @@ const escapeHtml = require("./safeHtml.js").escapeHtml;
 var rolldice = require("./Roll.js"),
     user = window.location.search.slice(1),
     channel = window.location.pathname.slice(1).toLowerCase(),
-    diceOrder = ['yellow', 'green', 'blue', 'red', 'purple', 'black', 'white'];
+    diceOrder = ['yellow', 'green', 'blue', 'red', 'purple', 'black', 'white'],
+    symbolOrder = ['success', 'advantage', 'triumph', 'fail', 'threat', 'despair', 'lightside', 'darkside'];
 
 class modifyDicePool extends Component {
   constructor(props) {
@@ -15,6 +16,7 @@ class modifyDicePool extends Component {
     this.state = {
       diceRoll: {yellow:0, green:0, blue:0, red:0, purple:0, black:0, white:0, polyhedral:0, success:0, advantage:0, triumph:0, fail:0, threat:0, despair:0, lightside:0, darkside:0},
       modifiedRoll: {yellow:0, green:0, blue:0, red:0, purple:0, black:0, white:0, polyhedral:0, success:0, advantage:0, triumph:0, fail:0, threat:0, despair:0, lightside:0, darkside:0},
+      showSymbols: false,
       messageRef: firebase.database().ref().child(`${channel}`).child('message'),
     };
   }
@@ -51,13 +53,11 @@ class modifyDicePool extends Component {
   }
 
   expandExtras() {
-    if (diceOrder.length < 8) {
-      diceOrder.push('success', 'advantage', 'triumph', 'fail', 'threat', 'despair', 'lightside', 'darkside');
-      this.setState({diceRoll:{yellow:this.state.diceRoll['yellow'], green:this.state.diceRoll['green'], blue:this.state.diceRoll['blue'], red:this.state.diceRoll['red'], purple:this.state.diceRoll['purple'], black:this.state.diceRoll['black'], white:this.state.diceRoll['white'], polyhedral:this.state.diceRoll['polyhedral'], success:0, advantage:0, triumph:0, fail:0, threat:0, despair:0, lightside:0, darkside:0}});
-    } else {
-      this.setState({diceRoll:{yellow:this.state.diceRoll['yellow'], green:this.state.diceRoll['green'], blue:this.state.diceRoll['blue'], red:this.state.diceRoll['red'], purple:this.state.diceRoll['purple'], black:this.state.diceRoll['black'], white:this.state.diceRoll['white'], polyhedral:this.state.diceRoll['polyhedral'], success:0, advantage:0, triumph:0, fail:0, threat:0, despair:0, lightside:0, darkside:0}});
-      diceOrder = ['yellow', 'green', 'blue', 'red', 'purple', 'black', 'white'];
-    }
+    // Closing the block drops its symbol counts, as the button always did, so nothing hidden gets rolled.
+    const diceRoll = Object.assign({}, this.state.diceRoll);
+    const modifiedRoll = Object.assign({}, this.state.modifiedRoll);
+    if (this.state.showSymbols) symbolOrder.forEach((symbol) => { diceRoll[symbol] = 0; modifiedRoll[symbol] = 0; });
+    this.setState({showSymbols: !this.state.showSymbols, diceRoll, modifiedRoll});
   }
 
   roll() {
@@ -113,10 +113,13 @@ class modifyDicePool extends Component {
     return (
       <div>
       <div className='row' style={{marginBottom: '8px'}}>
-        <button ref='extras' className='btn sm' aria-expanded={diceOrder.length > 7} onClick={this.expandExtras.bind(this)}>Symbols</button>
+        <button ref='extras' className='btn sm' aria-expanded={this.state.showSymbols} onClick={this.expandExtras.bind(this)}>Symbols</button>
       </div>
+      {this.state.showSymbols && <div className='pool symbols' aria-label='Result symbols'>
+        {symbolOrder.map((diceColor) => dieCard(diceColor, this.state.diceRoll[diceColor], this.addDie.bind(this, diceColor), this.removeDie.bind(this, diceColor)))}
+      </div>}
       <div className='pool'>
-        {diceOrder.slice(0, 7).map((diceColor) => dieCard(diceColor, this.state.diceRoll[diceColor], this.addDie.bind(this, diceColor), this.removeDie.bind(this, diceColor)))}
+        {diceOrder.map((diceColor) => dieCard(diceColor, this.state.diceRoll[diceColor], this.addDie.bind(this, diceColor), this.removeDie.bind(this, diceColor)))}
         <div className={'die' + (this.state.diceRoll.polyhedral ? ' on' : '')}>
           <input className='face' ref='polyhedral' defaultValue='100' aria-label='Polyhedral die sides' />
           <div className='ctl'>
@@ -126,7 +129,6 @@ class modifyDicePool extends Component {
           </div>
           <div className='dname'>Polyhedral (D-sides)</div>
         </div>
-        {diceOrder.slice(7).map((diceColor) => dieCard(diceColor, this.state.diceRoll[diceColor], this.addDie.bind(this, diceColor), this.removeDie.bind(this, diceColor)))}
       </div>
       <div className='actions'>
         <button ref='roll' className='btn primary roll' onClick={this.roll.bind(this)}>Roll</button>

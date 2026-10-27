@@ -12,6 +12,8 @@ import Initiative from './Initiative.js'
 import './index.css';
 import * as firebase from 'firebase';
 import config from './config';
+import { theme, applyTheme } from './functions/theme';
+applyTheme(theme());
 firebase.initializeApp(config.config);
 
 if (window.location.pathname !== '/') {

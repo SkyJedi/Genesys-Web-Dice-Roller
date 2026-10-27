@@ -8,13 +8,25 @@ const escapeHtml = require("./functions/safeHtml.js").escapeHtml;
 
 var channel = window.location.pathname.slice(1).toLowerCase(),
     user = window.location.search.slice(1),
-    diceOrder = ['yellow', 'green', 'blue', 'red', 'purple', 'black', 'white'];
+    diceOrder = ['yellow', 'green', 'blue', 'red', 'purple', 'black', 'white'],
+    symbolOrder = ['success', 'advantage', 'triumph', 'fail', 'threat', 'despair', 'lightside', 'darkside'];
 
 // Die art per Pattern's mockup: plain SVG shapes in the die colour (CSS .shape.<color>); symbols get a glyph.
 const SHAPES = {
-  d12: <polygon points='30,3 52,14 57,38 41,56 19,56 3,38 8,14' />,
-  d8: <polygon points='30,3 55,30 30,57 5,30' />,
-  d6: <rect x='7' y='7' width='46' height='46' rx='8' />,
+  // d12 = dodecahedron face-on, d8 = octahedron face-on, d6 = cube; .out is the outline (black on the white die), .facet the inner lines.
+  d12: <g>
+    <polygon className='out' points='30,5 45.9,8.2 53.8,22.3 55.7,38.3 44.7,50.2 30,57 15.3,50.2 4.3,38.3 6.2,22.3 14.1,8.2' />
+    <path className='facet' d='M30 18L41.4 26.3L37 39.7H23L18.6 26.3Z' />
+    <path className='facet' d='M30 18V5M41.4 26.3L53.8 22.3M37 39.7L44.7 50.2M23 39.7L15.3 50.2M18.6 26.3L6.2 22.3' />
+  </g>,
+  d8: <g>
+    <polygon className='out' points='30,3 53,16.5 53,43.5 30,57 7,43.5 7,16.5' />
+    <path className='facet' d='M30 3L53 43.5H7Z' />
+  </g>,
+  d6: <g>
+    <path className='out' d='M30 4L52 16V42L30 56L8 42V16Z' />
+    <path className='facet soft' d='M8 16L30 28L52 16M30 28V56' />
+  </g>,
 };
 const DIE_INFO = {
   yellow: ['Proficiency', 'd12'], green: ['Ability', 'd8'], blue: ['Boost', 'd6'], red: ['Challenge', 'd12'],
@@ -50,6 +62,7 @@ class Dice extends Component {
       diceRoll: {},
       messageRef: firebase.database().ref().child(`${channel}`).child('message'),
       showOptions: 'none',
+      showSymbols: false,
       destinyRef: firebase.database().ref().child(`${channel}`).child('destiny'),
       InitiativeRef: firebase.database().ref().child(`${channel}`).child('Initiative').child('order'),
     };
@@ -75,20 +88,17 @@ class Dice extends Component {
 
   reset() {
     this.setState({diceRoll: {yellow:0, green:0, blue:0, red:0, purple:0, black:0, white:0, polyhedral:0, success:0, advantage:0, triumph:0, fail:0, threat:0, despair:0, lightside:0, darkside:0}});
-    diceOrder = ['yellow', 'green', 'blue', 'red', 'purple', 'black', 'white'];
-    this.setState({showOptions: 'none'});
+    this.setState({showOptions: 'none', showSymbols: false});
     this.refs.caption.value = '';
     this.refs.polyhedral.value = 100;
   }
 
   expandExtras() {
-    if (diceOrder.length < 8) {
-      diceOrder.push('success', 'advantage', 'triumph', 'fail', 'threat', 'despair', 'lightside', 'darkside');
-      this.setState({diceRoll:{yellow:this.state.diceRoll['yellow'], green:this.state.diceRoll['green'], blue:this.state.diceRoll['blue'], red:this.state.diceRoll['red'], purple:this.state.diceRoll['purple'], black:this.state.diceRoll['black'], white:this.state.diceRoll['white'], polyhedral:this.state.diceRoll['polyhedral'], success:0, advantage:0, triumph:0, fail:0, threat:0, despair:0, lightside:0, darkside:0}});
-    } else {
-      this.setState({diceRoll:{yellow:this.state.diceRoll['yellow'], green:this.state.diceRoll['green'], blue:this.state.diceRoll['blue'], red:this.state.diceRoll['red'], purple:this.state.diceRoll['purple'], black:this.state.diceRoll['black'], white:this.state.diceRoll['white'], polyhedral:this.state.diceRoll['polyhedral'], success:0, advantage:0, triumph:0, fail:0, threat:0, despair:0, lightside:0, darkside:0}});
-      diceOrder = ['yellow', 'green', 'blue', 'red', 'purple', 'black', 'white'];
-    }
+    // The symbol dice open in their own block right under the heading, so a phone shows them without scrolling.
+    // Closing the block drops its symbol counts, as the button always did, so nothing hidden gets rolled.
+    const diceRoll = Object.assign({}, this.state.diceRoll);
+    if (this.state.showSymbols) symbolOrder.forEach((symbol) => { diceRoll[symbol] = 0; });
+    this.setState({showSymbols: !this.state.showSymbols, diceRoll});
   }
 
   dropMenu() {
@@ -182,10 +192,13 @@ class Dice extends Component {
     return (
       <div className='panel' aria-label='Dice pool'>
       <h2>Dice pool
-        <span className='grow'><button ref='extras' className='btn sm' aria-expanded={diceOrder.length > 7} onClick={this.expandExtras.bind(this)}>Symbols</button></span>
+        <span className='grow'><button ref='extras' className='btn sm' aria-expanded={this.state.showSymbols} onClick={this.expandExtras.bind(this)}>Symbols</button></span>
       </h2>
+      {this.state.showSymbols && <div className='pool symbols' aria-label='Result symbols'>
+        {symbolOrder.map((diceColor) => dieCard(diceColor, this.state.diceRoll[diceColor], this.addDie.bind(this, diceColor), this.removeDie.bind(this, diceColor)))}
+      </div>}
       <div className='pool'>
-        {diceOrder.slice(0, 7).map((diceColor) => dieCard(diceColor, this.state.diceRoll[diceColor], this.addDie.bind(this, diceColor), this.removeDie.bind(this, diceColor)))}
+        {diceOrder.map((diceColor) => dieCard(diceColor, this.state.diceRoll[diceColor], this.addDie.bind(this, diceColor), this.removeDie.bind(this, diceColor)))}
         <div className={'die' + (this.state.diceRoll.polyhedral ? ' on' : '')}>
           <input className='face' ref='polyhedral' defaultValue='100' aria-label='Polyhedral die sides' />
           <div className='ctl'>
@@ -195,7 +208,6 @@ class Dice extends Component {
           </div>
           <div className='dname'>Polyhedral (D-sides)</div>
         </div>
-        {diceOrder.slice(7).map((diceColor) => dieCard(diceColor, this.state.diceRoll[diceColor], this.addDie.bind(this, diceColor), this.removeDie.bind(this, diceColor)))}
       </div>
 
       <div className='actions'>
