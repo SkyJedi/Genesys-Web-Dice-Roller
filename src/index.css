@@ -97,6 +97,12 @@ a { color: var(--accent); }
 .col { min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: var(--gap); }
 .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; }
 .panel.grow-panel { flex: 1; }
+.feedback-panel summary { cursor: pointer; color: var(--accent); font-weight: 600; }
+.feedback-panel label { display: block; font-size: .85rem; color: var(--muted); margin: 10px 0 6px; }
+.feedback-panel textarea, .feedback-panel input { width: 100%; padding: 8px 12px; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; }
+.feedback-panel input { min-height: var(--tap); }
+.feedback-panel button { margin-top: 10px; min-height: var(--tap); padding: 0 14px; border-radius: 10px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.feedback-panel .feedback-note { margin: 8px 0 0; font-size: .9rem; color: var(--muted); }
 .panel h2 { margin: 0 0 10px; font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 8px; }
 .panel h2 .grow { margin-left: auto; display: flex; gap: 6px; letter-spacing: normal; text-transform: none; color: var(--text); }
 .tabbar { display: none; }

@@ -39,7 +39,7 @@ class Feedback extends Component {
       <details className='feedback'>
         <summary>Send feedback</summary>
         <form onSubmit={this.send}>
-          <label htmlFor='feedback'>Feedback (sent with your name above)</label>
+          <label htmlFor='feedback'>Feedback (sent with your name)</label>
           <textarea id='feedback' ref='feedback' required maxLength={4000} rows={4} />
           <label htmlFor='feedback-email'>Email, if you'd like a reply (optional)</label>
           <input id='feedback-email' ref='email' type='email' autoComplete='email' />

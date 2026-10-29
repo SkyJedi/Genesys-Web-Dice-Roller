@@ -9,6 +9,7 @@ import Chat from './Chat';
 import Character from './Character';
 import TopBar from './TopBar';
 import Initiative from './Initiative.js'
+import Feedback from './Feedback';
 import './index.css';
 import * as firebase from 'firebase';
 import config from './config';
@@ -52,7 +53,8 @@ class Table extends Component {
           {this.col('col-dice', 'Dice', [<Destiny key='d' />, <Initiative key='i' />, <Dice key='p' />])}
           {this.col('col-log', 'Roll log', <Message />)}
           {this.col('col-party', 'Party', <Character />)}
-          {this.col('col-chat', 'Chat', <Chat />)}
+          {this.col('col-chat', 'Chat', [<Chat key='c' />,
+            <div key='f' className='panel feedback-panel'><Feedback getUser={() => window.location.search.slice(1)} /></div>])}
         </div>
         <nav className='tabbar' role='tablist' aria-label='Sections'>
           {TABS.map(([id, label]) =>
