@@ -41,6 +41,18 @@ class Table extends Component {
     this.state = {tab: 'col-dice'};
   }
 
+  // Toolbar link: show the Chat column, open the feedback box there and bring it into view.
+  showFeedback = () => {
+    this.setState({tab: 'col-chat'}, () => {
+      const box = document.querySelector('.feedback-panel details');
+      if (!box) return;
+      box.open = true;
+      box.scrollIntoView({behavior: 'smooth', block: 'center'});
+      const text = box.querySelector('textarea');
+      if (text) text.focus();
+    });
+  }
+
   col(id, label, children) {
     return <section className={'col' + (this.state.tab === id ? ' show' : '')} id={id} aria-label={label}>{children}</section>;
   }
@@ -48,7 +60,7 @@ class Table extends Component {
   render() {
     return (
       <div className='app'>
-        <TopBar />
+        <TopBar onFeedback={this.showFeedback} />
         <div className='main'>
           {this.col('col-dice', 'Dice', [<Destiny key='d' />, <Initiative key='i' />, <Dice key='p' />])}
           {this.col('col-log', 'Roll log', <Message />)}

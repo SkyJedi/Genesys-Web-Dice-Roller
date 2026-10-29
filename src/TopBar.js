@@ -81,6 +81,7 @@ render() {
           <button role='menuitem' className='danger' onClick={this.popupDeleteChannel.bind(this)}>Delete Channel&hellip;</button>
         </div>
       </div>
+      <button className='btn' onClick={this.props.onFeedback}>Feedback</button>
       <button className='btn' onClick={this.signOut.bind(this)}>Logout</button>
     </header>
   );
