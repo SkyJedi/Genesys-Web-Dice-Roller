@@ -41,18 +41,6 @@ class Table extends Component {
     this.state = {tab: 'col-dice'};
   }
 
-  // Toolbar link: show the Chat column, open the feedback box there and bring it into view.
-  showFeedback = () => {
-    this.setState({tab: 'col-chat'}, () => {
-      const box = document.querySelector('.feedback-panel details');
-      if (!box) return;
-      box.open = true;
-      box.scrollIntoView({behavior: 'smooth', block: 'center'});
-      const text = box.querySelector('textarea');
-      if (text) text.focus();
-    });
-  }
-
   col(id, label, children) {
     return <section className={'col' + (this.state.tab === id ? ' show' : '')} id={id} aria-label={label}>{children}</section>;
   }
@@ -60,19 +48,19 @@ class Table extends Component {
   render() {
     return (
       <div className='app'>
-        <TopBar onFeedback={this.showFeedback} />
+        <TopBar onFeedback={() => this.setState({feedback: true})} />
         <div className='main'>
           {this.col('col-dice', 'Dice', [<Destiny key='d' />, <Initiative key='i' />, <Dice key='p' />])}
           {this.col('col-log', 'Roll log', <Message />)}
           {this.col('col-party', 'Party', <Character />)}
-          {this.col('col-chat', 'Chat', [<Chat key='c' />,
-            <div key='f' className='panel feedback-panel'><Feedback getUser={() => window.location.search.slice(1)} /></div>])}
+          {this.col('col-chat', 'Chat', <Chat />)}
         </div>
         <nav className='tabbar' role='tablist' aria-label='Sections'>
           {TABS.map(([id, label]) =>
             <button key={id} role='tab' aria-selected={this.state.tab === id} onClick={() => this.setState({tab: id})}>{label}</button>
           )}
         </nav>
+        {this.state.feedback && <Feedback getUser={() => window.location.search.slice(1)} onClose={() => this.setState({feedback: false})} />}
       </div>
     );
   }

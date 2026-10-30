@@ -68,10 +68,6 @@ a { color: var(--accent); }
   color: var(--accent-ink); background: var(--accent); border: 0; border-radius: 10px; }
 .card button:hover { filter: brightness(1.1); }
 .card .foot { margin-top: 28px; font-size: .85rem; color: var(--muted); line-height: 1.5; }
-.card .feedback { margin-top: 16px; text-align: left; }
-.card .feedback summary { cursor: pointer; text-align: center; color: var(--accent); font-weight: 600; }
-.card textarea { width: 100%; padding: 10px 14px; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; }
-.card .feedback-note { margin-top: 12px; font-size: .9rem; color: var(--muted); text-align: center; }
 
 /* ---------- shell ---------- */
 .app { display: flex; flex-direction: column; height: 100vh; }
@@ -97,12 +93,15 @@ a { color: var(--accent); }
 .col { min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: var(--gap); }
 .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; }
 .panel.grow-panel { flex: 1; }
-.feedback-panel summary { cursor: pointer; color: var(--accent); font-weight: 600; }
-.feedback-panel label { display: block; font-size: .85rem; color: var(--muted); margin: 10px 0 6px; }
-.feedback-panel textarea, .feedback-panel input { width: 100%; padding: 8px 12px; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; }
-.feedback-panel input { min-height: var(--tap); }
-.feedback-panel button { margin-top: 10px; min-height: var(--tap); padding: 0 14px; border-radius: 10px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); font-weight: 600; }
-.feedback-panel .feedback-note { margin: 8px 0 0; font-size: .9rem; color: var(--muted); }
+.feedback-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; overflow: auto; background: #000a; }
+.feedback-box { margin: 10vh auto 24px; width: 100%; max-width: min(440px, calc(100vw - 24px)); padding: 14px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); }
+.feedback-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.feedback-head h2 { margin: 0; font-size: 1.1rem; }
+.feedback-box label { display: block; font-size: .85rem; color: var(--muted); margin: 10px 0 6px; }
+.feedback-box textarea, .feedback-box input { width: 100%; padding: 8px 12px; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; }
+.feedback-box input { min-height: var(--tap); }
+.feedback-box form button { margin-top: 10px; min-height: var(--tap); padding: 0 14px; border-radius: 10px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.feedback-box .feedback-note { margin: 8px 0 0; font-size: .9rem; color: var(--muted); }
 .panel h2 { margin: 0 0 10px; font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 8px; }
 .panel h2 .grow { margin-left: auto; display: flex; gap: 6px; letter-spacing: normal; text-transform: none; color: var(--text); }
 .tabbar { display: none; }

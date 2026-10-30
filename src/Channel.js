@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './index.css';
-import Feedback from './Feedback';
 
 class Channel extends Component {
 
@@ -30,7 +29,6 @@ class Channel extends Component {
           Created by SkyJedi<br/>
           An assistant (dice roller, chat, Story Point tracker, character tracker, initiative tracker) for Fantasy Flight Games, Genesys
         </p>
-        <Feedback getUser={() => this.refs.user.value.trim()} />
       </main>
       </div>
     );
