@@ -1,0 +1,10 @@
+services:
+  web:
+    build: .
+    container_name: dice-web
+    restart: unless-stopped
+    # static nginx; tiny in practice, cap like the bots
+    mem_limit: 128m
+    # Host nginx forwards dice.skyjedi.com here; never public.
+    ports:
+      - "127.0.0.1:3010:80"
