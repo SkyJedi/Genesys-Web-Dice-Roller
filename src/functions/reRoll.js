@@ -4,7 +4,8 @@ import ModifyDicePool from './modifyDicePool';
 import SelectReRoll from './selectReRoll';
 import Fortune from './fortune';
 const fortuneDice = require("./fortuneFaces.js").fortuneDice;
-import * as firebase from 'firebase';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/database';
 var rolldice = require("./Roll.js");
 import '../popup.css';
 const channel = window.location.pathname.slice(1).toLowerCase(),

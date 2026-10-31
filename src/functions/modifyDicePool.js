@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import * as firebase from 'firebase';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/database';
 import '../index.css';
 import { dieCard } from '../Dice';
 const dice = require("./misc.js").dice;
@@ -11,6 +12,8 @@ var rolldice = require("./Roll.js"),
     symbolOrder = ['success', 'advantage', 'triumph', 'fail', 'threat', 'despair', 'lightside', 'darkside'];
 
 class modifyDicePool extends Component {
+  fields = {};
+
   constructor(props) {
     super(props);
     this.state = {
@@ -28,8 +31,8 @@ class modifyDicePool extends Component {
       diceRoll[color] = rebuilt.diceRoll[color]
     })
     this.setState({diceRoll});
-    this.refs.caption.value = rebuilt.caption;
-    this.refs.polyhedral.value = rebuilt.polyhedral;
+    this.fields.caption.value = rebuilt.caption;
+    this.fields.polyhedral.value = rebuilt.polyhedral;
   }
 
   addDie(diceColor) {
@@ -69,10 +72,10 @@ class modifyDicePool extends Component {
       })
       rollResults.text = `<span> ${escapeHtml(user)} modified dice pool </span>`;
       rollResults = rolldice.countSymbols(rollResults, user);
-      if (modifiedRoll['polyhedral'] > 0) rollResults = rolldice.rollPolyhedral(rollResults, modifiedRoll, this.refs.polyhedral.value);
-      if (this.refs.caption.value !== '') {
-        rollResults.caption = this.refs.caption.value;
-        rollResults.text += `<span> ${escapeHtml(this.refs.caption.value)} </span>`;
+      if (modifiedRoll['polyhedral'] > 0) rollResults = rolldice.rollPolyhedral(rollResults, modifiedRoll, this.fields.polyhedral.value);
+      if (this.fields.caption.value !== '') {
+        rollResults.caption = this.fields.caption.value;
+        rollResults.text += `<span> ${escapeHtml(this.fields.caption.value)} </span>`;
       }
       if (rollResults.text !== undefined) this.state.messageRef.push().set(rollResults);
       this.props.popupClose();
@@ -113,7 +116,7 @@ class modifyDicePool extends Component {
     return (
       <div>
       <div className='row' style={{marginBottom: '8px'}}>
-        <button ref='extras' className='btn sm' aria-expanded={this.state.showSymbols} onClick={this.expandExtras.bind(this)}>Symbols</button>
+        <button className='btn sm' aria-expanded={this.state.showSymbols} onClick={this.expandExtras.bind(this)}>Symbols</button>
       </div>
       {this.state.showSymbols && <div className='pool symbols' aria-label='Result symbols'>
         {symbolOrder.map((diceColor) => dieCard(diceColor, this.state.diceRoll[diceColor], this.addDie.bind(this, diceColor), this.removeDie.bind(this, diceColor)))}
@@ -121,7 +124,7 @@ class modifyDicePool extends Component {
       <div className='pool'>
         {diceOrder.map((diceColor) => dieCard(diceColor, this.state.diceRoll[diceColor], this.addDie.bind(this, diceColor), this.removeDie.bind(this, diceColor)))}
         <div className={'die' + (this.state.diceRoll.polyhedral ? ' on' : '')}>
-          <input className='face' ref='polyhedral' defaultValue='100' aria-label='Polyhedral die sides' />
+          <input className='face' ref={el => { this.fields.polyhedral = el; }} defaultValue='100' aria-label='Polyhedral die sides' />
           <div className='ctl'>
             <button aria-label='Remove polyhedral die' onClick={this.removeDie.bind(this, 'polyhedral')}>&darr;</button>
             <span className='n'>{this.state.diceRoll.polyhedral}</span>
@@ -131,8 +134,8 @@ class modifyDicePool extends Component {
         </div>
       </div>
       <div className='actions'>
-        <button ref='roll' className='btn primary roll' onClick={this.roll.bind(this)}>Roll</button>
-        <input className='field' ref='caption' name='caption' placeholder='Caption (optional)' aria-label='Caption' style={{gridColumn: '1 / -1'}}/>
+        <button className='btn primary roll' onClick={this.roll.bind(this)}>Roll</button>
+        <input className='field' ref={el => { this.fields.caption = el; }} name='caption' placeholder='Caption (optional)' aria-label='Caption' style={{gridColumn: '1 / -1'}}/>
       </div>
     </div>
     );

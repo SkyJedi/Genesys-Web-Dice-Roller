@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import * as firebase from 'firebase';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/database';
 import './index.css';
 import Popup from 'react-popup';
 import './popup.css';
@@ -8,6 +9,8 @@ var channel = window.location.pathname.slice(1).toLowerCase(),
     user = window.location.search.slice(1);
 
 class Chat extends Component {
+  fields = {};
+
   constructor() {
     super();
     this.state = {
@@ -32,11 +35,11 @@ class Chat extends Component {
 
   sendchat(stop) {
     stop.preventDefault();
-    let chat = this.imgCheck(escapeHtml(this.refs.chatInput.value));
+    let chat = this.imgCheck(escapeHtml(this.fields.chatInput.value));
     chat = this.urlCheck(chat);
     chat = `<span>${escapeHtml(user)}: `+ chat + `</span>`
     this.state.chatRef.push().set(chat);
-    this.refs.chatInput.value = '';
+    this.fields.chatInput.value = '';
   }
 
   imgCheck(chat) {
@@ -108,9 +111,9 @@ class Chat extends Component {
     return (
       <div className='panel grow-panel'>
         <h2>Chat <span className='grow'><button className='btn sm' onClick={this.clear.bind(this)}>Clear</button></span></h2>
-        <form className='chatform' ref='chatForm' onSubmit={this.sendchat.bind(this)}>
-        <input className='field' ref='chatInput' required placeholder='Say something&hellip; [blue] shows a die' aria-label='Chat message'/>
-        <button ref='send' className='btn primary'>Send</button>
+        <form className='chatform' onSubmit={this.sendchat.bind(this)}>
+        <input className='field' ref={el => { this.fields.chatInput = el; }} required placeholder='Say something&hellip; [blue] shows a die' aria-label='Chat message'/>
+        <button className='btn primary'>Send</button>
         </form>
         <div>
           {Object.keys(this.state.chat).length === 0 && <div className='empty'>No chat yet.</div>}

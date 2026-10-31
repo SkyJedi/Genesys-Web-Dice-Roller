@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import './index.css';
 
 class Channel extends Component {
+  fields = {};
+
 
   setChannel(stop) {
     stop.preventDefault();
-    var channel = this.refs.channel.value.replace(/\W/g, '').toLowerCase();
+    var channel = this.fields.channel.value.replace(/\W/g, '').toLowerCase();
 ;
-    var user = this.refs.user.value.replace(/\W/g, '');
+    var user = this.fields.user.value.replace(/\W/g, '');
     this.props.setFormChan(channel, user);
   }
 
@@ -20,9 +22,9 @@ class Channel extends Component {
       <p className='tag'>Dice roller and table assistant for tabletop RPGs</p>
       <form onSubmit={this.setChannel.bind(this)}>
         <label htmlFor='channel'>Channel name</label>
-        <input id='channel' ref="channel" name="channel" placeholder="Channel Name" autoComplete='off' />
+        <input id='channel' ref={el => { this.fields.channel = el; }} name="channel" placeholder="Channel Name" autoComplete='off' />
         <label htmlFor='user'>Your name</label>
-        <input id='user' ref="user" name="user" placeholder="User Name" autoComplete='off' />
+        <input id='user' ref={el => { this.fields.user = el; }} name="user" placeholder="User Name" autoComplete='off' />
         <button>Enter</button>
       </form>
         <p className='foot'>

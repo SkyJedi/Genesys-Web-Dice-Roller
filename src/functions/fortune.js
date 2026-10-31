@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import * as firebase from 'firebase';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/database';
 import '../index.css';
 const escapeHtml = require("./safeHtml.js").escapeHtml;
 const artSrc = require("./diceArt.js").artSrc;

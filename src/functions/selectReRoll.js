@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import * as firebase from 'firebase';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/database';
 import '../index.css';
 const escapeHtml = require("./safeHtml.js").escapeHtml;
 const artSrc = require("./diceArt.js").artSrc;
@@ -9,6 +10,8 @@ var rolldice = require("./Roll.js"),
     diceOrder = ['yellow', 'green', 'blue', 'red', 'purple', 'black', 'white', 'success', 'advantage', 'triumph', 'fail', 'threat', 'despair', 'lightside', 'darkside'];
 
 class selectReRoll extends Component {
+  fields = {};
+
   constructor(props) {
     super(props);
     this.state = {
@@ -24,7 +27,7 @@ class selectReRoll extends Component {
     let rebuilt = this.props.rebuilt;
     let displayFaces = [];
     let displayRepeat = {};
-    this.refs.caption.value = rebuilt.caption;
+    this.fields.caption.value = rebuilt.caption;
 
     diceOrder.forEach((color)=>{
       if (rollResults[color] === undefined) return;
@@ -51,9 +54,9 @@ class selectReRoll extends Component {
       })
       rollResults.text = `<span> ${escapeHtml(user)} rerolled selected dice </span>`;
       rollResults = rolldice.countSymbols(rollResults, user);
-      if (this.refs.caption.value !== '') {
-        rollResults.caption = this.refs.caption.value;
-        rollResults.text += `<span> ${escapeHtml(this.refs.caption.value)} </span>`;
+      if (this.fields.caption.value !== '') {
+        rollResults.caption = this.fields.caption.value;
+        rollResults.text += `<span> ${escapeHtml(this.fields.caption.value)} </span>`;
       }
       if (rollResults.text !== undefined) this.state.messageRef.push().set(rollResults);
       this.props.popupClose();
@@ -83,8 +86,8 @@ class selectReRoll extends Component {
           <div key={file.key} className='dice rerollselect' style={{backgroundImage: `url(${artSrc(file.path)})`}} onClick={this.selectDice.bind(this, file)}><img className='dice repeatselect' src={'/images/repeat.png'} alt='' style={{display: this.state.displayRepeat[file.key]}} /></div>
         )}
         <div className='row' style={{marginTop: '10px'}}>
-          <input className='field' ref='caption' name='caption' placeholder='Caption' aria-label='Caption' style={{flex: 1, width: 'auto'}}/>
-          <button ref='roll' className='btn primary' onClick={this.roll.bind(this)}>Roll</button>
+          <input className='field' ref={el => { this.fields.caption = el; }} name='caption' placeholder='Caption' aria-label='Caption' style={{flex: 1, width: 'auto'}}/>
+          <button className='btn primary' onClick={this.roll.bind(this)}>Roll</button>
         </div>
       </div>
 

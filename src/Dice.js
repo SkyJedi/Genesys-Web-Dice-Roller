@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import * as firebase from 'firebase';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/database';
 import './index.css';
 var crit = require("./functions/Crit.js");
 var rolldice = require("./functions/Roll.js");
@@ -57,6 +58,8 @@ export function dieCard(color, count, add, remove) {
 }
 
 class Dice extends Component {
+  fields = {};
+
   constructor(props) {
     super(props);
     this.state = {
@@ -90,8 +93,8 @@ class Dice extends Component {
   reset() {
     this.setState({diceRoll: {yellow:0, green:0, blue:0, red:0, purple:0, black:0, white:0, polyhedral:0, success:0, advantage:0, triumph:0, fail:0, threat:0, despair:0, lightside:0, darkside:0}});
     this.setState({showOptions: 'none', showSymbols: false});
-    this.refs.caption.value = '';
-    this.refs.polyhedral.value = 100;
+    this.fields.caption.value = '';
+    this.fields.polyhedral.value = 100;
   }
 
   expandExtras() {
@@ -112,7 +115,7 @@ class Dice extends Component {
 
   critical(critical, stop) {
     stop.preventDefault();
-    var critRoll = crit.d100(this.refs.modifier.value);
+    var critRoll = crit.d100(this.fields.modifier.value);
     var critText = ''
     if (critical === 'critical') {
       critText = crit.crit(critRoll[0]);
@@ -121,19 +124,19 @@ class Dice extends Component {
     }
     critText = escapeHtml(user) + ' ' + critRoll[1] + `<p>` + critText + `</p>`
     this.state.messageRef.push().set({text: critText});
-    this.refs.modifier.value = '';
+    this.fields.modifier.value = '';
 
   }
 
   roll() {
       let diceRoll = Object.assign({}, this.state.diceRoll);
-      let roll = rolldice.roll(diceRoll, this.refs.polyhedral.value, this.refs.caption.value, user);
+      let roll = rolldice.roll(diceRoll, this.fields.polyhedral.value, this.fields.caption.value, user);
       if (roll.text !== undefined) this.state.messageRef.push().set(roll);
-      if (this.refs.resetCheck.checked === false) this.reset();
+      if (this.fields.resetCheck.checked === false) this.reset();
      }
 
   destinyRoll(){
-    var destinyResult = rolldice.roll({white:1}, this.refs.polyhedral.value, '', user);
+    var destinyResult = rolldice.roll({white:1}, this.fields.polyhedral.value, '', user);
     destinyResult.text += `<br/> Adding to the Destiny Pool`;
     switch(destinyResult.white[0]) {
       case 'l':
@@ -154,18 +157,18 @@ class Dice extends Component {
         break;
     }
     this.state.messageRef.push().set(destinyResult);
-    this.refs.caption.value = '';
-    this.refs.polyhedral.value = 100;
+    this.fields.caption.value = '';
+    this.fields.polyhedral.value = 100;
   }
 
   initiativeRoll() {
     let diceRoll = Object.assign({}, this.state.diceRoll);
-    var initiativeResult = rolldice.roll(diceRoll, this.refs.polyhedral.value, this.refs.caption.value, user);
+    var initiativeResult = rolldice.roll(diceRoll, this.fields.polyhedral.value, this.fields.caption.value, user);
     if (initiativeResult === 0) return;
     var newInit = {};
     newInit.roll = (initiativeResult.rolledSymbols.s - initiativeResult.rolledSymbols.f).toString() + (initiativeResult.rolledSymbols.a - initiativeResult.rolledSymbols.t).toString() + initiativeResult.rolledSymbols['!'].toString();
     newInit.bonusDie = {blue: 0, black: 0};
-    if (this.refs.pcCheck.checked === false) {
+    if (this.fields.pcCheck.checked === false) {
       newInit.type = 'pc'
       newInit.roll += '1'
     } else {
@@ -176,11 +179,11 @@ class Dice extends Component {
     if (initiativeResult.text !== undefined) {
       this.state.messageRef.push().set(initiativeResult);
     }
-    if (this.refs.resetCheck.checked === false){
+    if (this.fields.resetCheck.checked === false){
       this.setState({diceRoll: {yellow:0, green:0, blue:0, red:0, purple:0, black:0, white:0, polyhedral:0, success:0, advantage:0, triumph:0, fail:0, threat:0, despair:0, lightside:0, darkside:0}});
     }
-    this.refs.caption.value = '';
-    this.refs.polyhedral.value = 100;
+    this.fields.caption.value = '';
+    this.fields.polyhedral.value = 100;
   }
 
   gleepglop () {
@@ -193,7 +196,7 @@ class Dice extends Component {
     return (
       <div className='panel' aria-label='Dice pool'>
       <h2>Dice pool
-        <span className='grow'><button ref='extras' className='btn sm' aria-expanded={this.state.showSymbols} onClick={this.expandExtras.bind(this)}>Symbols</button></span>
+        <span className='grow'><button className='btn sm' aria-expanded={this.state.showSymbols} onClick={this.expandExtras.bind(this)}>Symbols</button></span>
       </h2>
       {this.state.showSymbols && <div className='pool symbols' aria-label='Result symbols'>
         {symbolOrder.map((diceColor) => dieCard(diceColor, this.state.diceRoll[diceColor], this.addDie.bind(this, diceColor), this.removeDie.bind(this, diceColor)))}
@@ -201,7 +204,7 @@ class Dice extends Component {
       <div className='pool'>
         {diceOrder.map((diceColor) => dieCard(diceColor, this.state.diceRoll[diceColor], this.addDie.bind(this, diceColor), this.removeDie.bind(this, diceColor)))}
         <div className={'die' + (this.state.diceRoll.polyhedral ? ' on' : '')}>
-          <input className='face' ref='polyhedral' defaultValue='100' aria-label='Polyhedral die sides' />
+          <input className='face' ref={el => { this.fields.polyhedral = el; }} defaultValue='100' aria-label='Polyhedral die sides' />
           <div className='ctl'>
             <button aria-label='Remove polyhedral die' onClick={this.removeDie.bind(this, 'polyhedral')}>&darr;</button>
             <span className='n'>{this.state.diceRoll.polyhedral}</span>
@@ -212,24 +215,24 @@ class Dice extends Component {
       </div>
 
       <div className='actions'>
-        <button ref='roll' className='btn primary roll' onClick={this.roll.bind(this)}>Roll</button>
-        <input className='field' ref='caption' name='caption' placeholder='Caption (optional)' aria-label='Caption' />
-        <button ref='reset' className='btn' onClick={this.reset.bind(this)}>Reset</button>
-        <label className='switch'><input type='checkbox' ref='resetCheck'/><span className='track'></span>Save pool</label>
-        <button ref='specialRollsDropDown' className='btn' aria-expanded={this.state.showOptions !== 'none'} onClick={this.dropMenu.bind(this)}>Special rolls &#x25BE;</button>
+        <button className='btn primary roll' onClick={this.roll.bind(this)}>Roll</button>
+        <input className='field' ref={el => { this.fields.caption = el; }} name='caption' placeholder='Caption (optional)' aria-label='Caption' />
+        <button className='btn' onClick={this.reset.bind(this)}>Reset</button>
+        <label className='switch'><input type='checkbox' ref={el => { this.fields.resetCheck = el; }}/><span className='track'></span>Save pool</label>
+        <button className='btn' aria-expanded={this.state.showOptions !== 'none'} onClick={this.dropMenu.bind(this)}>Special rolls &#x25BE;</button>
       </div>
       <div className={'special' + (this.state.showOptions !== 'none' ? ' open' : '')}>
         <form className='row'>
           <button onClick={this.critical.bind(this, 'critical')} className='btn'>Critical</button>
           <button onClick={this.critical.bind(this, 'shipcrit')} className='btn'>Ship Critical</button>
-          <input className='field' ref='modifier' name='modifier' placeholder='modifier' aria-label='Critical modifier' />
+          <input className='field' ref={el => { this.fields.modifier = el; }} name='modifier' placeholder='modifier' aria-label='Critical modifier' />
         </form>
-        <button ref='gleepglop' className='btn' onClick={this.gleepglop.bind(this)}>Gleep Glop</button>
-        <button ref='destinyRoll' className='btn' onClick={this.destinyRoll.bind(this)}>Roll Destiny</button>
+        <button className='btn' onClick={this.gleepglop.bind(this)}>Gleep Glop</button>
+        <button className='btn' onClick={this.destinyRoll.bind(this)}>Roll Destiny</button>
         <span className='break'></span>
-        <button ref='initiativeResult.rolledSymbols' className='btn' onClick={this.initiativeRoll.bind(this)}>Roll Initiative</button>
+        <button className='btn' onClick={this.initiativeRoll.bind(this)}>Roll Initiative</button>
         <span>PC</span>
-        <label className='switch'><input type='checkbox' ref='pcCheck' aria-label='NPC'/><span className='track'></span>NPC</label>
+        <label className='switch'><input type='checkbox' ref={el => { this.fields.pcCheck = el; }} aria-label='NPC'/><span className='track'></span>NPC</label>
       </div>
     </div>
     );

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Popup from 'react-popup';
-import * as firebase from 'firebase';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/database';
 import './index.css';
 import './popup.css';
 const dice = require("./functions/misc.js").dice;
@@ -10,6 +11,8 @@ var channel = window.location.pathname.slice(1).toLowerCase();
 
 
 class Character extends Component {
+  fields = {};
+
   constructor(props) {
     super(props);
     this.state = {
@@ -187,9 +190,9 @@ class Character extends Component {
   modifyStats(e) {
     e.preventDefault();
     var modifyStat = {
-      currentWounds: this.refs.currentWounds.value,
-      currentStrain: this.refs.currentStrain.value,
-      credits: this.refs.credits.value
+      currentWounds: this.fields.currentWounds.value,
+      currentStrain: this.fields.currentStrain.value,
+      credits: this.fields.credits.value
     };
     let currentCharacter = Object.assign({}, this.state.currentCharacter);
     for (var j = 0; j < Object.keys(modifyStat).length; j++) {
@@ -220,12 +223,12 @@ class Character extends Component {
         }
         if (modifier < 0) modifier = 0;
         currentCharacter[stat] = modifier;
-    this.refs.currentWounds.blur();
-    this.refs.currentStrain.blur();
-    this.refs.credits.blur();
-    this.refs.currentWounds.value = '';
-    this.refs.currentStrain.value = '';
-    this.refs.credits.value = '';
+    this.fields.currentWounds.blur();
+    this.fields.currentStrain.blur();
+    this.fields.credits.blur();
+    this.fields.currentWounds.value = '';
+    this.fields.currentStrain.value = '';
+    this.fields.credits.value = '';
     this.state.characterRef.child(this.getcurrentKey()).set(currentCharacter);
     this.checkIncap(currentCharacter);
     this.state.messageRef.push().set({text: message});
@@ -355,7 +358,7 @@ class Character extends Component {
         </h2>
         <div className='char-top'>
           <button className='portrait' title='Edit character' aria-label='Edit character' onClick={this.editCharacter.bind(this)}>
-            <img ref='imageURL' src={c['imageURL']} alt=''/>
+            <img src={c['imageURL']} alt=''/>
           </button>
           <div>
             <div className='cname'>{c['name']}</div>
@@ -365,13 +368,13 @@ class Character extends Component {
         <form className='stats' onSubmit={this.modifyStats.bind(this)}>
           <div className='stat'><div className='l'>Wounds</div><div className='v'>{c['currentWounds']}/{c['maxWounds']}</div>
             <div className='bar w'><i style={{width: pct(c['currentWounds'], c['maxWounds'])}}></i></div>
-            <input ref='currentWounds' placeholder='+2, -1 or 5' aria-label='Change wounds' /></div>
+            <input ref={el => { this.fields.currentWounds = el; }} placeholder='+2, -1 or 5' aria-label='Change wounds' /></div>
           <div className='stat'><div className='l'>Strain</div><div className='v'>{c['currentStrain']}/{c['maxStrain']}</div>
             <div className='bar'><i style={{width: pct(c['currentStrain'], c['maxStrain'])}}></i></div>
-            <input ref='currentStrain' placeholder='+2, -1 or 5' aria-label='Change strain' /></div>
+            <input ref={el => { this.fields.currentStrain = el; }} placeholder='+2, -1 or 5' aria-label='Change strain' /></div>
           <div className='stat'><div className='l'>Credits</div><div className='v'>{c['credits']}</div>
             <div className='bar none'><i></i></div>
-            <input ref='credits' placeholder='+50, -20' aria-label='Change credits' /></div>
+            <input ref={el => { this.fields.credits = el; }} placeholder='+50, -20' aria-label='Change credits' /></div>
           <button className='btn primary' type='submit'>Set</button>
         </form>
         <table className='party'>

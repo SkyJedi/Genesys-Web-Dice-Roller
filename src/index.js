@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import Popup from 'react-popup';
 import Destiny from './Destiny';
 import Channel from './Channel';
@@ -11,7 +11,8 @@ import TopBar from './TopBar';
 import Initiative from './Initiative.js'
 import Feedback from './Feedback';
 import './index.css';
-import * as firebase from 'firebase';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/database';
 import config from './config';
 import { theme, applyTheme } from './functions/theme';
 applyTheme(theme());
@@ -26,10 +27,7 @@ function setChanName(chanName, userName) {
 }
 
 function setChanPage () {
-  ReactDOM.render(
-    <Channel setFormChan={setChanName} />,
-    document.getElementById('root')
-  );
+  createRoot(document.getElementById('root')).render(<Channel setFormChan={setChanName} />);
 }
 
 const TABS = [['col-dice', '\u{1F3B2} Dice'], ['col-log', '\u{1F4DC} Log'], ['col-party', '\u{1F9D1}\u200D\u{1F680} Party'], ['col-chat', '\u{1F4AC} Chat']];
@@ -70,15 +68,9 @@ function startUp () {
   var webApp = <Table />;
 
 
-  ReactDOM.render(
-    webApp,
-    document.getElementById('root')
-  );
+  createRoot(document.getElementById('root')).render(webApp);
 
-  ReactDOM.render(
-    <Popup />,
-    document.getElementById('popupContainer')
-  );
+  createRoot(document.getElementById('popupContainer')).render(<Popup />);
 };
 
 // After the Table class is defined (classes are not hoisted).

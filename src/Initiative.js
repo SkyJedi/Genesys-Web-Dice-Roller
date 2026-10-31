@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Popup from 'react-popup';
-import * as firebase from 'firebase';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/database';
 import './index.css';
 const dice = require("./functions/misc.js").dice;
 
