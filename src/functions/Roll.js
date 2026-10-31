@@ -1,5 +1,5 @@
-const dice = require("./misc.js").dice;
-const escapeHtml = require("./safeHtml.js").escapeHtml;
+import { dice } from './misc.js';
+import { escapeHtml } from './safeHtml.js';
 
 function roll(diceRoll, polyhedralValue, caption, user) {
   var rollResults = {};
@@ -161,10 +161,4 @@ function printsymbols (number, symbol) {
   return text;
 }
 
-module.exports = {
-    roll: roll,
-    rollDicePool: rollDicePool,
-    rollPolyhedral: rollPolyhedral,
-    countSymbols: countSymbols,
-    diceFaces: diceFaces,
-};
+export { roll, rollDicePool, rollPolyhedral, countSymbols, diceFaces };

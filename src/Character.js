@@ -4,8 +4,8 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/database';
 import './index.css';
 import './popup.css';
-const dice = require("./functions/misc.js").dice;
-const cleanHtml = require("./functions/safeHtml.js").cleanHtml;
+import { dice } from './functions/misc.js';
+import { cleanHtml } from './functions/safeHtml.js';
 
 var channel = window.location.pathname.slice(1).toLowerCase();
 

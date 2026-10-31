@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/database';
 import '../index.css';
-const escapeHtml = require("./safeHtml.js").escapeHtml;
-const artSrc = require("./diceArt.js").artSrc;
-var rolldice = require("./Roll.js"),
-    user = window.location.search.slice(1),
+import { escapeHtml } from './safeHtml.js';
+import { artSrc } from './diceArt.js';
+import * as rolldice from './Roll.js';
+var user = window.location.search.slice(1),
     channel = window.location.pathname.slice(1).toLowerCase(),
     diceOrder = ['yellow', 'green', 'blue', 'red', 'purple', 'black', 'white', 'success', 'advantage', 'triumph', 'fail', 'threat', 'despair', 'lightside', 'darkside'];
 

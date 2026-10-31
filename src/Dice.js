@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/database';
 import './index.css';
-var crit = require("./functions/Crit.js");
-var rolldice = require("./functions/Roll.js");
-const dice = require("./functions/misc.js").dice;
-const artSrc = require("./functions/diceArt.js").artSrc;
-const escapeHtml =require("./functions/safeHtml.js").escapeHtml;
+import * as crit from './functions/Crit.js';
+import * as rolldice from './functions/Roll.js';
+import { dice } from './functions/misc.js';
+import { artSrc } from './functions/diceArt.js';
+import { escapeHtml } from './functions/safeHtml.js';
 
 var channel = window.location.pathname.slice(1).toLowerCase(),
     user = window.location.search.slice(1),

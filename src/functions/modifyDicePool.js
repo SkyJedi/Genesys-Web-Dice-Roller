@@ -3,10 +3,10 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/database';
 import '../index.css';
 import { dieCard } from '../Dice';
-const dice = require("./misc.js").dice;
-const escapeHtml = require("./safeHtml.js").escapeHtml;
-var rolldice = require("./Roll.js"),
-    user = window.location.search.slice(1),
+import { dice } from './misc.js';
+import { escapeHtml } from './safeHtml.js';
+import * as rolldice from './Roll.js';
+var user = window.location.search.slice(1),
     channel = window.location.pathname.slice(1).toLowerCase(),
     diceOrder = ['yellow', 'green', 'blue', 'red', 'purple', 'black', 'white'],
     symbolOrder = ['success', 'advantage', 'triumph', 'fail', 'threat', 'despair', 'lightside', 'darkside'];

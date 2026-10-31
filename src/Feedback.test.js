@@ -7,7 +7,7 @@ describe('the pop-up', () => {
 
   beforeEach(() => {
     global.IS_REACT_ACT_ENVIRONMENT = true;
-    onClose = jest.fn();
+    onClose = vi.fn();
     box = document.createElement('div');
     document.body.appendChild(box);
     root = createRoot(box);
@@ -59,7 +59,7 @@ describe('the pop-up', () => {
   });
 
   it('posts the text once and thanks the user', async () => {
-    global.fetch = jest.fn(() => Promise.resolve());
+    global.fetch = vi.fn(() => Promise.resolve());
     box.querySelector('textarea').value = ' Nice ';
     await act(async () => {
       box.querySelector('form').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
@@ -70,7 +70,7 @@ describe('the pop-up', () => {
   });
 
   it('stays open while sending', async () => {
-    global.fetch = jest.fn(() => new Promise(() => {}));
+    global.fetch = vi.fn(() => new Promise(() => {}));
     box.querySelector('textarea').value = 'Nice';
     await act(async () => {
       box.querySelector('form').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
@@ -81,8 +81,8 @@ describe('the pop-up', () => {
   });
 
   it('offers the form link when the post fails', async () => {
-    global.fetch = jest.fn(() => Promise.reject(new Error('offline')));
-    jest.spyOn(console, 'error').mockImplementation(() => {});
+    global.fetch = vi.fn(() => Promise.reject(new Error('offline')));
+    vi.spyOn(console, 'error').mockImplementation(() => {});
     box.querySelector('textarea').value = 'Nice';
     await act(async () => {
       box.querySelector('form').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));

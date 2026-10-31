@@ -4,7 +4,7 @@ import 'firebase/compat/database';
 import Popup from 'react-popup';
 import './index.css';
 
-const escapeHtml = require("./functions/safeHtml.js").escapeHtml;
+import { escapeHtml } from './functions/safeHtml.js';
 
 var channel = window.location.pathname.slice(1).toLowerCase(),
     user = window.location.search.slice(1);

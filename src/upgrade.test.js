@@ -7,10 +7,10 @@ import Channel from './Channel';
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
-// Dice and Chat read their channel from the address when they load, so set it before requiring them.
+// Dice and Chat read their channel from the address when they load, so set it before importing them.
 window.history.pushState({}, '', '/testchannel?Luke');
-const Dice = require('./Dice').default;
-const Chat = require('./Chat').default;
+const { default: Dice } = await import('./Dice');
+const { default: Chat } = await import('./Chat');
 
 // Stays offline: writes queue locally and nothing reaches a real database.
 firebase.initializeApp({ databaseURL: 'https://dice-test.firebaseio.com' });
@@ -31,7 +31,7 @@ describe('React 19 and firebase compat', () => {
   });
 
   test('channel form reads its fields', () => {
-    const setFormChan = jest.fn();
+    const setFormChan = vi.fn();
     act(() => root.render(<Channel setFormChan={setFormChan} />));
     box.querySelector('#channel').value = 'My Table';
     box.querySelector('#user').value = 'Luke';

@@ -1,4 +1,4 @@
-const dice = require("./misc.js").dice;
+import { dice } from './misc.js';
 var purpledie = `<img src=/images/purple.png alt='' style=max-width:15px />`,
     bluedie = `<img src=/images/blue.png alt='' style=max-width:15px />`,
     blackdie = `<img src=/images/black.png alt='' style=max-width:15px />`;
@@ -242,8 +242,4 @@ function d100 (str) {
   return [total, message];
 }
 
-module.exports = {
-    crit: crit,
-    shipcrit: shipcrit,
-    d100:d100
-};
+export { crit, shipcrit, d100 };

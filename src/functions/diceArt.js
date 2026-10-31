@@ -26,8 +26,4 @@ function artSrc(src) {
   return diceArt() === 'swrpg' && hasSwrpg.test(src) ? src.replace('/images/', '/images/swrpg/') : src;
 }
 
-module.exports = {
-  diceArt: diceArt,
-  setDiceArt: setDiceArt,
-  artSrc: artSrc,
-};
+export { diceArt, setDiceArt, artSrc };

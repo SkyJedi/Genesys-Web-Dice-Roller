@@ -1,7 +1,7 @@
 // Chat and the roll log are stored as HTML in Firebase, which anyone in a channel can write to.
 // escapeHtml() turns typed text into plain text before it is stored; cleanHtml() runs on every
 // stored message before it is shown, keeping only the markup the app itself writes.
-const artSrc = require('./diceArt.js').artSrc;
+import { artSrc } from './diceArt.js';
 
 function escapeHtml(text) {
   return String(text)
@@ -62,7 +62,4 @@ function cleanHtml(html) {
   return doc.body.innerHTML;
 }
 
-module.exports = {
-  escapeHtml: escapeHtml,
-  cleanHtml: cleanHtml,
-};
+export { escapeHtml, cleanHtml };

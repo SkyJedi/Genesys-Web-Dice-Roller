@@ -4,8 +4,8 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/database';
 import './index.css';
 import './popup.css';
-var reRoll = require("./functions/reRoll.js").reRoll;
-var cleanHtml = require("./functions/safeHtml.js").cleanHtml;
+import { reRoll } from './functions/reRoll.js';
+import { cleanHtml } from './functions/safeHtml.js';
 
 
 

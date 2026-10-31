@@ -3,7 +3,7 @@ import Popup from 'react-popup';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/database';
 import './index.css';
-const dice = require("./functions/misc.js").dice;
+import { dice } from './functions/misc.js';
 
 var channel = window.location.pathname.slice(1).toLowerCase();
 

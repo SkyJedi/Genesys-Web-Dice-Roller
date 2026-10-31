@@ -36,9 +36,4 @@ function setTheme(t) {
   }
 }
 
-module.exports = {
-  THEMES: THEMES,
-  theme: theme,
-  setTheme: setTheme,
-  applyTheme: applyTheme,
-};
+export { THEMES, theme, setTheme, applyTheme };

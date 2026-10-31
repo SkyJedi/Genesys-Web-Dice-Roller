@@ -1,10 +1,8 @@
-const seedrandom = require('seedrandom');
+import seedrandom from 'seedrandom';
 var rng = seedrandom('added entropy.', { entropy: true });
 
 function cryptoDice(sides) {
   return Math.floor(rng() * sides) + 1;
 }
 
-module.exports = {
-    dice:cryptoDice
-};
+export { cryptoDice as dice };

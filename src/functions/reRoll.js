@@ -3,10 +3,10 @@ import Popup from 'react-popup';
 import ModifyDicePool from './modifyDicePool';
 import SelectReRoll from './selectReRoll';
 import Fortune from './fortune';
-const fortuneDice = require("./fortuneFaces.js").fortuneDice;
+import { fortuneDice } from './fortuneFaces.js';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/database';
-var rolldice = require("./Roll.js");
+import * as rolldice from './Roll.js';
 import '../popup.css';
 const channel = window.location.pathname.slice(1).toLowerCase(),
       user = window.location.search.slice(1);
@@ -99,5 +99,4 @@ function unmatchedFortune(message) {
   });
 }
 
-// ESM export: this file uses import, and webpack 5 forbids module.exports in it.
 export { reRoll };

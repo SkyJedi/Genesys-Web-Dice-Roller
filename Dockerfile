@@ -1,8 +1,9 @@
-# react-scripts 0.9.5 (webpack 1) fails on Node 17+ (OpenSSL), so build with Node 16.
-FROM node:16-alpine AS build
+# Vite needs a current Node.
+FROM node:22-alpine AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
+COPY vite.config.mjs index.html ./
 COPY public ./public
 COPY src ./src
 RUN npm run build

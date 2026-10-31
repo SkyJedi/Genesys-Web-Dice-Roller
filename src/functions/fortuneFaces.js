@@ -1,5 +1,5 @@
-const dice = require("./misc.js").dice;
-const diceFaces = require("./Roll.js").diceFaces;
+import { dice } from './misc.js';
+import { diceFaces } from './Roll.js';
 
 // Unmatched Fortune turns one positive die to a face that shares an edge with the rolled face.
 // Luke's face map (2026-10-19): for each face (1-based, in diceFaces order) the faces next to it.
@@ -31,9 +31,4 @@ function fortuneOptions(color, face) {
   });
 }
 
-module.exports = {
-  neighbours: neighbours,
-  fortuneDice: fortuneDice,
-  rolledFace: rolledFace,
-  fortuneOptions: fortuneOptions,
-};
+export { neighbours, fortuneDice, rolledFace, fortuneOptions };
