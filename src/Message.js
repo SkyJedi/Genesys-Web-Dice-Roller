@@ -5,7 +5,8 @@ import 'firebase/compat/database';
 import './index.css';
 import './popup.css';
 import { reRoll } from './functions/reRoll.js';
-import { cleanHtml } from './functions/safeHtml.js';
+import { cleanHtml, escapeHtml } from './functions/safeHtml.js';
+import { poolOf, poolText, getCurrentCharacter } from './functions/savedPool.js';
 
 
 
@@ -51,6 +52,42 @@ class Message extends Component {
     if (Object.keys(message).length > 1) reRoll(message);
   }
 
+  // Right-click (or long-press) a roll: offer to keep its dice pool on the character shown in the Party panel.
+  savePool(key, e) {
+    const message = this.state.message[key];
+    const pool = poolOf(message);
+    if (Object.keys(pool).length === 0) return;
+    e.preventDefault();
+    const who = getCurrentCharacter();
+    if (!who) {
+      Popup.create({title: 'Save pool', className: 'messages', content: 'Add a character in the Party panel first, then save the pool to them.', buttons: {left: ['cancel']}});
+      return;
+    }
+    Popup.create({
+      title: 'Save pool',
+      className: 'messages',
+      content: 'Save ' + poolText(pool) + ' to ' + who.name + '? It replaces the pool they have saved.',
+      buttons: {
+        left: ['cancel'],
+        right: [{
+          text: 'Save',
+          className: 'success',
+          action: () => {
+            const characterRef = firebase.database().ref().child(`${channel}`).child('character');
+            characterRef.once('value', snap => {
+              const all = snap.val() || {};
+              const fbKey = Object.keys(all).find(k => all[k] && all[k].key === who.key);
+              if (fbKey === undefined) return;
+              characterRef.child(fbKey).child('pool').set(pool);
+              this.state.messageRef.push().set({text: escapeHtml(who.name) + ' saved a dice pool: ' + poolText(pool)});
+            });
+            Popup.close();
+          }
+        }]
+      }
+    });
+  }
+
   clear() {
     Popup.create({
     title: 'Clear Messages',
@@ -78,7 +115,7 @@ class Message extends Component {
         {Object.keys(this.state.message).reverse().map((k)=>
           <div className={'entry' + (/^-{3}/.test(this.state.message[k].text) ? ' divider' : '')} key={k}>
           <button className='x' aria-label='Delete message' onClick={this.popupDeleteMessage.bind(this, k)}>&#x2715;</button>
-          <div className='body' title='Click to reroll' onClick={this.reRoll.bind(this, k)} dangerouslySetInnerHTML={{ __html: cleanHtml(this.state.message[k].text) }} />
+          <div className='body' title='Click to reroll. Right-click to save the pool to the current character.' onClick={this.reRoll.bind(this, k)} onContextMenu={this.savePool.bind(this, k)}dangerouslySetInnerHTML={{ __html: cleanHtml(this.state.message[k].text) }} />
           </div>
         )}
         </div>

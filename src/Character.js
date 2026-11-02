@@ -6,6 +6,7 @@ import './index.css';
 import './popup.css';
 import { dice } from './functions/misc.js';
 import { cleanHtml } from './functions/safeHtml.js';
+import { cleanPool, poolText, applyPool, setCurrentCharacter } from './functions/savedPool.js';
 
 var channel = window.location.pathname.slice(1).toLowerCase();
 
@@ -22,6 +23,10 @@ class Character extends Component {
       currentCharacter: {name: 'No Characters', currentWounds: 0, maxWounds: 0, currentStrain: 0, maxStrain: 0, credits: 0, imageURL: '/images/crest.png'},
       incapacitated: 'none',
     };
+  }
+
+  componentDidUpdate() {
+    setCurrentCharacter(this.state.currentCharacter);
   }
 
   componentDidMount() {
@@ -49,6 +54,7 @@ class Character extends Component {
           <label htmlFor='charName'>Character name</label><input className='mm-popup__input' id='charName' placeholder='Character Name' />
           <label htmlFor='maxWounds'>Max wounds</label><input className='mm-popup__input' type='number' id='maxWounds' placeholder='Max Wounds' />
           <label htmlFor='maxStrain'>Max strain</label><input className='mm-popup__input' type='number' id='maxStrain' placeholder='Max Strain' />
+          <label htmlFor='soak'>Soak</label><input className='mm-popup__input' type='number' id='soak' placeholder='Soak' />
           <label htmlFor='credits'>Credits</label><input className='mm-popup__input' type='number' id='credits' placeholder='Credits' />
           <label htmlFor='imageURL'>Image URL</label><input className='mm-popup__input' id='imageURL' placeholder='optional' />
         </div>,
@@ -64,6 +70,7 @@ class Character extends Component {
                                   maxWounds: document.getElementById('maxWounds').value,
                                   currentStrain: 0,
                                   maxStrain: document.getElementById('maxStrain').value,
+                                  soak: document.getElementById('soak').value || 0,
                                   credits: document.getElementById('credits').value,
                                   imageURL: document.getElementById('imageURL').value,
                                   key: this.genKey(),
@@ -93,6 +100,7 @@ class Character extends Component {
           <label htmlFor='charName'>Character name</label><input className='mm-popup__input' id='charName' defaultValue={this.state.currentCharacter['name']} />
           <label htmlFor='maxWounds'>Max wounds</label><input className='mm-popup__input' type='number' id='maxWounds' defaultValue={this.state.currentCharacter['maxWounds']} />
           <label htmlFor='maxStrain'>Max strain</label><input className='mm-popup__input' type='number' id='maxStrain' defaultValue={this.state.currentCharacter['maxStrain']} />
+          <label htmlFor='soak'>Soak</label><input className='mm-popup__input' type='number' id='soak' defaultValue={this.state.currentCharacter['soak'] || 0} />
           <label htmlFor='credits'>Credits</label><input className='mm-popup__input' type='number' id='credits' defaultValue={this.state.currentCharacter['credits']} />
           <label htmlFor='imageURL'>Image URL</label><input className='mm-popup__input' id='imageURL' defaultValue={this.state.currentCharacter['imageURL']} />
         </div>,
@@ -108,12 +116,15 @@ class Character extends Component {
                                   maxWounds: document.getElementById('maxWounds').value,
                                   currentStrain: this.state.currentCharacter['currentStrain'],
                                   maxStrain: document.getElementById('maxStrain').value,
+                                  soak: document.getElementById('soak').value || 0,
                                   credits: document.getElementById('credits').value,
                                   imageURL: document.getElementById('imageURL').value,
                                   key: this.state.currentCharacter['key'],
                                   init: this.state.currentCharacter['init'],
                                   dice: this.state.currentCharacter['dice'],
                                 };
+                    // a saved pool must survive an edit (the database refuses undefined)
+                    if (this.state.currentCharacter['pool'] !== undefined) currentCharacter['pool'] = this.state.currentCharacter['pool'];
                     if (currentCharacter['imageURL'] === '') {
                       currentCharacter['imageURL'] = '/images/crest.png';
                     }
@@ -344,6 +355,7 @@ class Character extends Component {
 
   render() {
     const c = this.state.currentCharacter;
+    const pool = cleanPool(c['pool']);
     // Bar fill for current/max; max may be 0 or a string from the form.
     const pct = (cur, max) => (+max > 0 ? Math.min(100, +cur / +max * 100) : 0) + '%';
     return (
@@ -362,7 +374,9 @@ class Character extends Component {
           </button>
           <div>
             <div className='cname'>{c['name']}</div>
+            <div className='soak'>Soak <b>{c['soak'] || 0}</b></div>
             <div className='incap' style={{display: this.state.incapacitated}}>Incapacitated</div>
+            {Object.keys(pool).length > 0 && <button className='btn sm usepool' title='Fill the dice pool with this saved pool (does not roll)' onClick={() => applyPool(pool)}>Use pool: {poolText(pool)}</button>}
           </div>
         </div>
         <form className='stats' onSubmit={this.modifyStats.bind(this)}>
@@ -378,7 +392,7 @@ class Character extends Component {
           <button className='btn primary' type='submit'>Set</button>
         </form>
         <table className='party'>
-        <thead><tr><th>Init</th><th>Name</th><th>Wound</th><th>Strain</th><th>Dice</th></tr></thead>
+        <thead><tr><th>Init</th><th>Name</th><th>Wound</th><th>Strain</th><th>Soak</th><th>Dice</th></tr></thead>
         <tbody>
         {Object.keys(this.state.character).map((k) => {
           const ch = this.state.character[k];
@@ -388,6 +402,7 @@ class Character extends Component {
             <td><button onClick={this.selectCharacter.bind(this, k)}>{ch.name}</button></td>
             <td onClick={this.selectCharacter.bind(this, k)}>{ch.currentWounds}/{ch.maxWounds}</td>
             <td onClick={this.selectCharacter.bind(this, k)}>{ch.currentStrain}/{ch.maxStrain}</td>
+            <td onClick={this.selectCharacter.bind(this, k)}>{ch.soak || 0}</td>
             <td><button aria-label={'Add bonus die to ' + ch.name} onClick={this.addBonusDice.bind(this, k)}>
               <span dangerouslySetInnerHTML={{ __html: cleanHtml(ch.dice.blue) }} /><span dangerouslySetInnerHTML={{ __html: cleanHtml(ch.dice.black) }} /><span dangerouslySetInnerHTML={{ __html: cleanHtml(ch.dice.upgrade) }} /><span dangerouslySetInnerHTML={{ __html: cleanHtml(ch.dice.downgrade) }} />
               {ch.dice.blue + ch.dice.black + ch.dice.upgrade + ch.dice.downgrade === '' && '+'}

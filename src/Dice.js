@@ -7,6 +7,7 @@ import * as rolldice from './functions/Roll.js';
 import { dice } from './functions/misc.js';
 import { artSrc } from './functions/diceArt.js';
 import { escapeHtml } from './functions/safeHtml.js';
+import { POOL_COLORS, SYMBOL_COLORS, SET_POOL_EVENT } from './functions/savedPool.js';
 
 var channel = window.location.pathname.slice(1).toLowerCase(),
     user = window.location.search.slice(1),
@@ -74,6 +75,19 @@ class Dice extends Component {
 
   componentDidMount() {
     this.reset();
+    window.addEventListener(SET_POOL_EVENT, this.usePool);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener(SET_POOL_EVENT, this.usePool);
+  }
+
+  // A character's saved pool: fill the pool with it. It does not roll.
+  usePool = (e) => {
+    const pool = e.detail || {};
+    const diceRoll = {};
+    POOL_COLORS.forEach((color) => { diceRoll[color] = pool[color] || 0; });
+    this.setState({diceRoll, showSymbols: SYMBOL_COLORS.some((color) => diceRoll[color] > 0)});
   }
 
   addDie(diceColor) {
