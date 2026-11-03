@@ -34,7 +34,9 @@ describe('the pop-up', () => {
   });
 
   it('keeps Tab inside the pop-up', () => {
-    const items = box.querySelectorAll('button');
+    //the Chip in link is the last stop
+    const items = box.querySelectorAll('button, a, textarea, input');
+    expect(items[items.length - 1].textContent).toBe('Chip in');
     items[items.length - 1].focus();
     act(() => { document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', cancelable: true })); });
     expect(document.activeElement).toBe(items[0]);
@@ -78,6 +80,18 @@ describe('the pop-up', () => {
     act(() => { document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' })); });
     expect(box.querySelector('.btn').disabled).toBe(true);
     expect(onClose).not.toHaveBeenCalled();
+  });
+
+  it('shows the Chip in link to our funding page, also after sending', async () => {
+    const link = () => box.querySelector('.chip-in a');
+    expect(link().href).toBe('https://somethingveryclever.com/funding.html?bot=Dice%20Roller');
+    expect(link().target).toBe('_blank');
+    global.fetch = vi.fn(() => Promise.resolve());
+    box.querySelector('textarea').value = 'Nice';
+    await act(async () => {
+      box.querySelector('form').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    });
+    expect(link()).not.toBeNull();
   });
 
   it('offers the form link when the post fails', async () => {

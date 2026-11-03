@@ -11,6 +11,9 @@ export const feedbackFields = ({ user, feedback, email }) => {
   return params;
 };
 
+//our funding page, not Stripe directly, so swapping test links for live ones needs no site change
+export const CHIP_IN = 'https://somethingveryclever.com/funding.html?bot=Dice%20Roller';
+
 //pre-filled form link, the fallback when the post can't go out
 export const feedbackUrl = (answers) => `${FORM}viewform?usp=pp_url&${feedbackFields({ ...answers, feedback: undefined })}`;
 
@@ -78,6 +81,7 @@ class Feedback extends Component {
                 <button disabled={status === 'sending'}>{status === 'sending' ? 'Sending...' : 'Send feedback'}</button>
                 {status === 'failed' && <p className='feedback-note'>Sorry, it couldn't be sent. Please copy your text and send it <a href={url} target='_blank' rel='noopener noreferrer'>here</a> instead.</p>}
               </form>}
+          <p className='feedback-note chip-in'>Like this site? <a href={CHIP_IN} target='_blank' rel='noopener noreferrer'>Chip in</a></p>
         </div>
       </div>
     );
