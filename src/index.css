@@ -143,6 +143,14 @@ input.face { border: 1px solid var(--line); background: var(--bg); text-align: c
 .pool.symbols { margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px dashed var(--line); }
 .pick { display: inline-flex; align-items: center; gap: 6px; font-size: .85rem; color: var(--muted); }
 .pick .field { width: auto; min-height: var(--tap); }
+.dropdown { position: relative; }
+.dropdown > .field { display: inline-flex; align-items: center; gap: 8px; text-align: left; }
+.dropdown-list { position: absolute; left: 0; top: calc(100% + 6px); z-index: 20; min-width: 100%; max-height: 70vh; overflow-y: auto; padding: 6px; white-space: nowrap; background: var(--panel-2); border: 1px solid var(--line); border-radius: 12px; }
+.dropdown-group { padding: 8px 12px 2px; font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.dropdown-list [role="option"] { display: flex; align-items: center; min-height: var(--tap); padding: 0 12px; border-radius: 8px; color: var(--text); cursor: pointer; outline: none; }
+.dropdown-list [role="option"]:hover, .dropdown-list [role="option"]:focus { background: var(--panel); }
+.dropdown-list [role="option"]:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.dropdown-list [aria-selected="true"] { font-weight: 700; color: var(--accent); }
 .ctl { display: grid; grid-template-columns: 36px 1fr 36px; align-items: center; text-align: center; }
 .ctl button { min-height: 36px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); font-size: 1.1rem; }
 .ctl .n { font-size: 1.5rem; font-weight: 800; }
