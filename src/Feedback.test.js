@@ -84,7 +84,7 @@ describe('the pop-up', () => {
 
   it('shows the Chip in link to our funding page, also after sending', async () => {
     const link = () => box.querySelector('.chip-in a');
-    expect(link().href).toBe('https://somethingveryclever.com/funding.html?bot=Dice%20Roller');
+    expect(link().href).toBe('https://somethingveryclever.com/chipin.html?bot=Dice%20Roller');
     expect(link().target).toBe('_blank');
     global.fetch = vi.fn(() => Promise.resolve());
     box.querySelector('textarea').value = 'Nice';

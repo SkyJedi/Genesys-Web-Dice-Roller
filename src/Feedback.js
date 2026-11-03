@@ -11,8 +11,8 @@ export const feedbackFields = ({ user, feedback, email }) => {
   return params;
 };
 
-//our funding page, not Stripe directly, so swapping test links for live ones needs no site change
-export const CHIP_IN = 'https://somethingveryclever.com/funding.html?bot=Dice%20Roller';
+//our chip-in page for our own projects (one-time gifts), not Stripe directly, so swapping test links for live ones needs no site change
+export const CHIP_IN = 'https://somethingveryclever.com/chipin.html?bot=Dice%20Roller';
 
 //pre-filled form link, the fallback when the post can't go out
 export const feedbackUrl = (answers) => `${FORM}viewform?usp=pp_url&${feedbackFields({ ...answers, feedback: undefined })}`;
