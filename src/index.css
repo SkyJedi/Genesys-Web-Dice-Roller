@@ -195,7 +195,7 @@ input.face { border: 1px solid var(--line); background: var(--bg); text-align: c
 .soak b { font-size: 1.1rem; }
 .usepool { margin-top: 6px; }
 .incap { color: var(--danger); font-weight: 800; letter-spacing: .06em; text-transform: uppercase; font-size: .85rem; }
-.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 8px; margin: 12px 0; }
 .stat { background: var(--panel-2); border: 1px solid var(--line); border-radius: 12px; padding: 8px; text-align: center; }
 .stat .v { font-size: 1.4rem; font-weight: 800; }
 .stat .l { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }

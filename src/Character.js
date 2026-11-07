@@ -203,7 +203,15 @@ class Character extends Component {
     var modifyStat = {
       currentWounds: this.fields.currentWounds.value,
       currentStrain: this.fields.currentStrain.value,
+      soak: this.fields.soak.value,
       credits: this.fields.credits.value
+    };
+    // wording per stat: [gain verb, loss verb, "set" label]
+    const words = {
+      currentWounds: [' takes ', ' recovers ', 'wounds'],
+      currentStrain: [' takes ', ' recovers ', 'strain'],
+      soak: [' gains ', ' loses ', 'soak'],
+      credits: [' earns ', ' spends ', 'credits'],
     };
     let currentCharacter = Object.assign({}, this.state.currentCharacter);
     for (var j = 0; j < Object.keys(modifyStat).length; j++) {
@@ -212,33 +220,32 @@ class Character extends Component {
       if (modifier !== '') {
         var message = currentCharacter['name'];
         if (modifier.includes('+')) {
-          if (stat === 'credits') message += ' earns ';
-          else message += ' takes ';
+          message += words[stat][0];
           modifier = (modifier).replace(/\D/g, '');
           message += (modifier + ' ' + stat.replace('current', '') + ' for a total of ');
-          modifier = +this.state.currentCharacter[stat] + +modifier;
+          modifier = +(this.state.currentCharacter[stat] || 0) + +modifier;
           message += (modifier + ' ' + stat.replace('current', ''));
       	//subtraction modifier
         } else if (modifier.includes('-')) {
-          if (stat === 'credits') {message += ' spends '}
-          else {message += ' recovers '}
+          message += words[stat][1];
           modifier = (modifier).replace(/\D/g, '');
           message += (modifier + ' ' + stat.replace('current', '') + ' for a total of ');
-          modifier = +this.state.currentCharacter[stat] - +modifier;
+          modifier = +(this.state.currentCharacter[stat] || 0) - +modifier;
           message += (modifier + ' ' + stat.replace('current', ''));
 
         } else {
           modifier = +(modifier).replace(/\D/g, '');
-          if (stat === 'credits') message += (' ' + stat + ' set to ' + modifier);
-          else message += (' ' + stat.slice(7).toLowerCase() + ' set to ' + modifier);
+          message += (' ' + words[stat][2] + ' set to ' + modifier);
         }
         if (modifier < 0) modifier = 0;
         currentCharacter[stat] = modifier;
     this.fields.currentWounds.blur();
     this.fields.currentStrain.blur();
+    this.fields.soak.blur();
     this.fields.credits.blur();
     this.fields.currentWounds.value = '';
     this.fields.currentStrain.value = '';
+    this.fields.soak.value = '';
     this.fields.credits.value = '';
     this.state.characterRef.child(this.getcurrentKey()).set(currentCharacter);
     this.checkIncap(currentCharacter);
@@ -386,6 +393,9 @@ class Character extends Component {
           <div className='stat'><div className='l'>Strain</div><div className='v'>{c['currentStrain']}/{c['maxStrain']}</div>
             <div className='bar'><i style={{width: pct(c['currentStrain'], c['maxStrain'])}}></i></div>
             <input ref={el => { this.fields.currentStrain = el; }} placeholder='+2, -1 or 5' aria-label='Change strain' /></div>
+          <div className='stat'><div className='l'>Soak</div><div className='v'>{c['soak'] || 0}</div>
+            <div className='bar none'><i></i></div>
+            <input ref={el => { this.fields.soak = el; }} placeholder='+1, -1 or 3' aria-label='Change soak' /></div>
           <div className='stat'><div className='l'>Credits</div><div className='v'>{c['credits']}</div>
             <div className='bar none'><i></i></div>
             <input ref={el => { this.fields.credits = el; }} placeholder='+50, -20' aria-label='Change credits' /></div>
