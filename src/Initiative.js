@@ -224,6 +224,12 @@ addBonusDice(slot, time, color) {
   }
 }
 
+clearBonusDice(slot, time) {
+  const empty = {blue: 0, black: 0, upgrade: 0, downgrade: 0};
+  const ref = time === 'current' ? this.state.InitiativeRef : this.state.InitiativePastRef;
+  ref.child(slot.key).update({'bonusDie': empty});
+}
+
 Reset() {
   firebase.database().ref().child(`${channel}`).child('Initiative').remove();
 }
@@ -256,6 +262,12 @@ popupModifyInitiativeSlot(slot, time) {
           className: 'setback',
           action: () => {
             this.addBonusDice(slot, time, 'black');
+            Popup.close();
+          }
+        }, {
+          text: 'Clear dice',
+          action: () => {
+            this.clearBonusDice(slot, time);
             Popup.close();
           }
         }, {

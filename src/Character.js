@@ -278,6 +278,14 @@ class Character extends Component {
             this.state.characterRef.set(character);
             Popup.close();
           }
+        }, {
+          text: 'Clear',
+          className: 'danger',
+          action: () => {
+            character[k].dice = {blue: '', black: '', upgrade: '', downgrade: ''};
+            this.state.characterRef.set(character);
+            Popup.close();
+          }
         }  ],
         right: [{
               text: 'Upgrade',
