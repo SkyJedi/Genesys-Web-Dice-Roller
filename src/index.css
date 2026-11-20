@@ -70,7 +70,7 @@ a { color: var(--accent); }
 .card .foot { margin-top: 28px; font-size: .85rem; color: var(--muted); line-height: 1.5; }
 
 /* ---------- shell ---------- */
-.app { display: flex; flex-direction: column; height: 100vh; }
+.app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
 .topbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px var(--gap); background: var(--panel); border-bottom: 1px solid var(--line); }
 .brand { font-weight: 800; letter-spacing: .08em; }
 .who { color: var(--muted); font-size: .9rem; margin-right: auto; }
@@ -222,11 +222,12 @@ input.face { border: 1px solid var(--line); background: var(--bg); text-align: c
 
 /* ---------- phone: one panel at a time ---------- */
 @media (max-width: 960px) {
-  .main { grid-template-columns: 1fr; grid-template-rows: none; padding: 8px; padding-bottom: 76px; overflow-y: auto; }
+  .main { grid-template-columns: 1fr; grid-template-rows: none; padding: 8px; padding-bottom: 76px; padding-bottom: calc(96px + env(safe-area-inset-bottom)); overflow-y: auto; }
   #col-dice, #col-log, #col-party, #col-chat { grid-column: 1; grid-row: auto; max-height: none; }
   .col { display: none; overflow: visible; }
   .col.show { display: flex; }
   .tabbar { display: grid; grid-template-columns: repeat(4, 1fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; background: var(--panel); border-top: 1px solid var(--line); }
+  .tabbar { padding-bottom: env(safe-area-inset-bottom); }
   .tabbar button { min-height: 62px; background: none; border: 0; color: var(--muted); font-weight: 600; font-size: .85rem; }
   .tabbar button[aria-selected="true"] { color: var(--accent); box-shadow: inset 0 3px 0 var(--accent); }
   .who { display: none; }
